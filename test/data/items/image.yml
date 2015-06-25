@@ -1,0 +1,13 @@
+---
+default:
+  type: s-image
+  id: image_default
+  display: "true"
+  svg:
+    tag: image
+    attrs:
+      x: "200"
+      y: "200"
+      width: "100"
+      height: "100"
+      "xlink:href": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVRJREFUeNqkkr9Og1AUxk+5kMBgdCQxId19CJx8AlfnLk3s6oKxYesCK3FzNT6AL4GLm2lcmFmahlwo1/MhNKW0UONJPi45nPPj/LkjpRT9x0ZsOJ9YV7ee935K0ut8fsPHJ+sRBOjN930FKwcEQyxykKvXUE1KSQW3s9lsev8uhCDEIgePLaAsS5KcnOd5L8BgIXYfIPBnALIBgNK0pkrRAhRFQZLJQwDNMAixHQCo38slXY7HvQDEHK3gOQxP2r1lWYcriOOYjl2s+r5U5rpuB6CjAqwoCMLOJgzueza7J8dxKEmSZgZ6C4AKdF2n1Sqj6XRSOReLYFsyvsFM02xm0AIYGq8HQeu1JNu2Kyfeq9Up0QLU98CotoKeWV4URV9pmmZSqioYUupXjW8XwDlnyMVkHNYF65r1wIEvh4bIfd/tuT5YEwDOAW6m+gfDILIfAQYAAm/QA0tCHVUAAAAASUVORK5CYII="

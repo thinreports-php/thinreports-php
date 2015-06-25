@@ -1,0 +1,19 @@
+---
+default:
+  type: s-iblock
+  id: image_block_default
+  display: "true"
+  position-x: left
+  position-y: top
+  box:
+    x: 100
+    y: 100
+    widht: 100
+    height: 100
+  svg:
+    tag: image
+    attrs:
+      x: "200"
+      y: "200"
+      width: "100"
+      height: "100"

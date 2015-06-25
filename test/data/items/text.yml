@@ -1,0 +1,29 @@
+---
+default:
+  type: s-text
+  id: text_default
+  display: "true"
+  line-height: ""
+  line-height-ratio: ""
+  valign: ""
+  box:
+    x: 100
+    y: 100
+    width: 100
+    height: 100
+  text:
+    - テキスト一行目
+    - テキスト二行目
+    - テキスト三行目
+  svg:
+    tag: g
+    attrs:
+      fill: "#000000"
+      kerning: auto
+      letter-spacing: normal
+      font-size: "18"
+      font-family: IPAMincho
+      font-weight: normal
+      font-style: normal
+      text-anchor: start
+      text-decoration: none

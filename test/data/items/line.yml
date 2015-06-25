@@ -1,0 +1,15 @@
+---
+default:
+  type: s-line
+  id: line_default
+  display: "true"
+  svg:
+    tag: line
+    attrs:
+      stroke-width: "1"
+      stroke-dasharray: none
+      fill: none
+      x1: "100"
+      y1: "100"
+      x2: "200"
+      y2: "200"

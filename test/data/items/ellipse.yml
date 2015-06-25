@@ -1,0 +1,16 @@
+---
+default:
+  type: s-ellipse
+  id: ellipse_default
+  display: "true"
+  svg:
+    tag: ellipse
+    attrs:
+      stroke-width: "1"
+      stroke-dasharray: none
+      fill: "#ffffff"
+      fill-opacity: "1"
+      rx: "100"
+      ry: "100"
+      cx: "200"
+      cy: "300"

@@ -1,0 +1,70 @@
+---
+default: &default
+  type: s-tblock
+  id: text_block_default
+  value: ""
+  ref-id: ""
+  display: "true"
+  multiple: "false"
+  line-height: ""
+  line-height-ratio: ""
+  valign: top
+  overflow: truncate
+  word-wrap: break-word
+  box:
+    x: 100
+    y: 100
+    width: 100
+    height: 100
+  format:
+    base: ""
+    type: ""
+  svg:
+    tag: text
+    attrs:
+      kerning: auto
+      letter-spacing: normal
+      fill: "#000000"
+      font-size: 18
+      font-family: Helvetica
+      font-weight: normal
+      font-style: normal
+      text-anchor: start
+      text-decoration: none
+
+with_multiple:
+  <<: *default
+  id: text_block_multiple
+  multiple: "true"
+
+with_default_value:
+  <<: *default
+  id: text_block_default_value
+  value: "10000"
+
+with_number_formatting:
+  <<: *default
+  id: text_block_number_formatting
+  format:
+    base: ""
+    type: number
+    number:
+      precision: 1
+      delimiter: ,
+
+with_base_formatting:
+  <<: *default
+  id: text_block_base_formatting
+  format:
+    base: "- {value} -"
+    type: ""
+
+with_reference_to_default:
+  <<: *default
+  id: text_block_reference_to_default
+  ref-id: text_block_default
+
+with_reference_to_formatting:
+  <<: *default
+  id: text_block_reference_to_number_formatting
+  ref-id: text_block_number_formatting
