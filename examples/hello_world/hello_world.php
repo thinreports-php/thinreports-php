@@ -9,18 +9,30 @@ $report = new Report(__DIR__ . '/hello_world.tlf');
 
 $page = $report->addPage();
 $page->item('world')->setValue('World');
+$page->item('sekai')->setValue('世界');
+
+$page = $report->addPage();
+$page('world')->setValue('World');
 $page('sekai')->setValue('世界');
 
-$report->addPage(null, function ($new_page) {
-    $new_page->item('world')->setValue('PHP')
-                            ->setStyle('color', 'blue');
-    $new_page->setItemValue('sekai', '帳票');
+$page = $report->addPage();
+$page->setItemValue('world', 'World');
+$page->setItemValue('sekai', '世界');
+
+$report->addPage(function ($new_page) {
+    $new_page('world')->setValue('World')->setStyle('color', 'blue');
+    $new_page('sekai')->setValue('世界');
 });
 
 $page = $report->addPage();
 $page->setItemValues([
-    'world' => 'Thinreports',
-    'sekai' => 'PDF'
+    'world' => 'World',
+    'sekai' => '世界'
+]);
+
+$report->addPage()->setItemValues([
+    'world' => 'World',
+    'sekai' => '世界'
 ]);
 
 $report->generate(__DIR__ . '/hello_world.pdf');

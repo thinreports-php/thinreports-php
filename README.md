@@ -84,7 +84,7 @@ $page('world')->setValue('World')
 $page('hello')->hide();
 
 // 4th page
-$report->addPage(null, function ($new_page) {
+$report->addPage(function ($new_page) {
     $new_page->setItemValues(['world' => 'Japan', 'thinreports' => 'PDF']);
 });
 

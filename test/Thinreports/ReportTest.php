@@ -18,7 +18,7 @@ class ReportTest extends TestCase
         $this->assertInstanceOf('Thinreports\Page\Page', $page);
         $this->assertTrue($page->isCountable());
 
-        $page = $report->addPage(null, function ($new_page) {});
+        $page = $report->addPage(function ($new_page) {});
         $this->assertInstanceOf('Thinreports\Page\Page', $page);
         $this->assertTrue($page->isCountable());
 
@@ -27,7 +27,15 @@ class ReportTest extends TestCase
 
         $has_called = false;
 
-        $report->addPage(null, function ($new_page) use (&$has_called) {
+        $report->addPage(function ($new_page) use (&$has_called) {
+            $this->assertInstanceOf('Thinreports\Page\Page', $new_page);
+            $has_called = true;
+        });
+        $this->assertTrue($has_called);
+
+        $has_called = false;
+
+        $report->addPage(['count' => false], function ($new_page) use (&$has_called) {
             $this->assertInstanceOf('Thinreports\Page\Page', $new_page);
             $has_called = true;
         });

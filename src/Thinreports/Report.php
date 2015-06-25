@@ -29,15 +29,24 @@ class Report
     }
 
     /**
-     * @param array|null $options {
-     *      @option boolean "count" optional
-     * }
-     * @param callable|null $callback
+     * @param $options_or_handler,...
      * @return Page\Page
+     *
+     * Usage example:
+     *
+     *  $page->addPage();
+     *  $page->addPage(['count' => true]);
+     *  $page->addPage(function ($new_page) {
+     *      // do something
+     *  });
+     *  $page->addPage(['count' => true], function ($new_page) {
+     *      // do something
+     *  });
      */
-    public function addPage(array $options = null, callable $handler = null)
+    public function addPage(...$options_or_handler)
     {
-        $options     = $this->pageOptionValues($options);
+        list($options, $handler) = $this->parseAddPageArgs($options_or_handler);
+
         $page_number = $this->getNextPageNumber($options['count']);
 
         $new_page = new Page\Page($this, $this->layout, $page_number, $options['count']);
@@ -164,5 +173,29 @@ class Report
             $values['count'] = $options['count'] === true;
         }
         return $values;
+    }
+
+    /**
+     * @access private
+     *
+     * @param array $args
+     * @return array
+     */
+    private function parseAddPageArgs(array $args)
+    {
+        $options = null;
+        $handler = null;
+
+        if (!empty($args)) {
+            $last_arg = array_pop($args);
+
+            if (is_callable($last_arg)) {
+                $handler = $last_arg;
+                $options = array_pop($args);
+            } else {
+                $options = $last_arg;
+            }
+        }
+        return [$this->pageOptionValues($options), $handler];
     }
 }
