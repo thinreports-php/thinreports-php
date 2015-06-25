@@ -1,13 +1,13 @@
 # Thinreports Generator for PHP
 
+[![Latest Stable Version](https://poser.pugx.org/thinreports-php/thinreports-php/version)](https://packagist.org/packages/thinreports-php/thinreports-php)
+[![Latest Unstable Version](https://poser.pugx.org/thinreports-php/thinreports-php/v/unstable)](//packagist.org/packages/thinreports-php/thinreports-php)
+[![Build Status](https://travis-ci.org/thinreports-php/thinreports-php.svg)](https://travis-ci.org/thinreports-php/thinreports-php)
+
 ## About
 
 Thinreports Generator for PHP is an implementation of
 the [Thinreports Generator](https://github.com/thinreports/thinreports-generator) in PHP.
-
-### Current Status
-
-**In Development**
 
 ### What is Thinreports
 
@@ -24,9 +24,8 @@ Please see the following pages for further details.
 
   * [Quick Start](#quick-start)
   * [Quick Reference](#quick-reference)
-  * [Discussion on Gitter](https://gitter.im/thinreports-php/thinreports-php)
   * Contributing
-  * Development Community
+  * Development Community [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports-php/thinreports-php?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ### Supported versions
 
@@ -110,6 +109,7 @@ for currently available features.
   * List
   * Multiple Layouts
   * Disabling Hyphenation
+  * Font Fallback
   * Permission and Security settings of PDF
 
 ### Other Tasks
@@ -118,14 +118,6 @@ for currently available features.
     * Disposing raw base64-data after generating a image file
   * Performance Optimization
     * Pre-Converting IPA-Font to AFM from TTF
-
-## Contributing
-
-TODO
-
-## Development Community
-
-TODO
 
 ## License
 
