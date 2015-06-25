@@ -22,10 +22,13 @@ Please see the following pages for further details.
 
 ## Getting Started
 
+  * [Features](#features)
   * [Quick Start](#quick-start)
   * [Quick Reference](#quick-reference)
-  * Contributing
-  * Development Community [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports-php/thinreports-php?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+  * [Discussion Group on Gitter](https://gitter.im/thinreports-php/thinreports-php?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+  * [Development Community](#development-community)
+
+
 
 ### Supported versions
 
@@ -118,6 +121,10 @@ for currently available features.
     * Disposing raw base64-data after generating a image file
   * Performance Optimization
     * Pre-Converting IPA-Font to AFM from TTF
+
+## Development Community
+
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports-php/thinreports-php/dev)
 
 ## License
 
