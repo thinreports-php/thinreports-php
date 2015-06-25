@@ -6,9 +6,6 @@ use Thinreports\Item;
 
 class LayoutTest extends TestCase
 {
-    /**
-     * @covers Layout::loadFile
-     */
     function test_loadFile()
     {
         try {
@@ -27,9 +24,6 @@ class LayoutTest extends TestCase
         $this->assertCount(9, $layout->getItemFormats());
     }
 
-    /**
-     * @covers Layout::parse
-     */
     function test_parse()
     {
         try {
@@ -50,9 +44,6 @@ class LayoutTest extends TestCase
         $this->assertInstanceOf('Thinreports\Layout', $layout);
     }
 
-    /**
-     * @covers Layout::cleanFormat
-     */
     function test_cleanFormat()
     {
         $svg = '<!--SHAPE{"type":"rect"}-->' .
@@ -68,9 +59,6 @@ class LayoutTest extends TestCase
         $this->assertArrayNotHasKey('state', $format);
     }
 
-    /**
-     * @covers Layout::extractItemFormats
-     */
     function test_extractItemFormats()
     {
         $layout = <<<'SVG'
@@ -95,9 +83,6 @@ SVG;
         $this->assertArrayNotHasKey('s-list', $formats);
     }
 
-    /**
-     * @covers Layout::hasItem
-     */
     function test_hasItem()
     {
         $item_formats = ['foo_id' => []];
@@ -107,9 +92,6 @@ SVG;
         $this->assertFalse($layout->hasItem('unknown_id'));
     }
 
-    /**
-     * @covers Layout::createItem
-     */
     function test_createItem()
     {
         $item_formats = $this->dataItemFormats([
@@ -217,9 +199,6 @@ SVG;
         $this->assertEquals([100.9, 999.9], $layout->getPageSize());
     }
 
-    /**
-     * @covers Layout::getIdentifier
-     */
     function test_getIdentifier()
     {
         $format = [
@@ -230,9 +209,6 @@ SVG;
         $this->assertEquals(md5('<svg></svg>'), $layout->getIdentifier());
     }
 
-    /**
-     * @covers Layout::getFormat
-     */
     function test_getFormat()
     {
         $format = [
@@ -244,9 +220,6 @@ SVG;
         $this->assertSame($format, $layout->getFormat());
     }
 
-    /**
-     * @covers Layout::getItemFormats
-     */
     function test_getItemFormats()
     {
         $item_formats = [
