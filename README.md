@@ -44,7 +44,7 @@ See the [Official Installation Guide](http://www.thinreports.org/documentation/e
 
 Put this line in your composer.json:
 
-    "require-dev": {
+    "require": {
       "thinreports-php/thinreports-php": "dev-master"
     }
 
