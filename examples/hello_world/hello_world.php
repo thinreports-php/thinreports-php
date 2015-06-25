@@ -14,7 +14,7 @@ $page('sekai')->setValue('世界');
 $report->addPage(null, function ($new_page) {
     $new_page->item('world')->setValue('PHP')
                             ->setStyle('color', 'blue');
-    $new_page->item('sekai')->setValue('帳票');
+    $new_page->setItemValue('sekai', '帳票');
 });
 
 $page = $report->addPage();
