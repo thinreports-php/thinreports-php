@@ -99,7 +99,7 @@ class BasicStyle
     /**
      * @param array $item_format
      */
-    protected function initializeStyles($item_format)
+    protected function initializeStyles(array $item_format)
     {
         $this->styles = $item_format['svg']['attrs'] ?: [];
     }
