@@ -8,6 +8,7 @@
 
 Thinreports Generator for PHP is an implementation of
 the [Thinreports Generator](https://github.com/thinreports/thinreports-generator) in PHP.
+It provides easy and simple way for generating a PDF on pure PHP.
 
 ### What is Thinreports
 
@@ -28,9 +29,7 @@ Please see the following pages for further details.
   * [Discussion Group on Gitter](https://gitter.im/thinreports-php/thinreports-php?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
   * [Development Community](#development-community)
 
-
-
-### Supported versions
+## Supported versions
 
   * PHP 5.6
 
