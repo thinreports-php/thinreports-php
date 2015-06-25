@@ -34,7 +34,7 @@ class TextStyle extends BasicStyle
     private $vertical_align = 'top';
 
     /**
-     * @param array $item_format
+     * {@inheritdoc}
      */
     protected function initializeStyles(array $item_format)
     {
