@@ -60,6 +60,15 @@ class FontTest extends TestCase
         $this->assertEquals($expected_result, $actual);
         $this->assertContains($actual, $test_font->_getInstalledBuiltinFonts());
     }
+    function unicodeFontProvider()
+    {
+        return [
+            ['ipam', 'IPAMincho'],
+            ['ipag', 'IPAGothic'],
+            ['ipamp', 'IPAPMincho'],
+            ['ipagp', 'IPAPGothic']
+        ];
+    }
 
     function test_isBuiltinUnicodeFont()
     {
@@ -77,15 +86,5 @@ class FontTest extends TestCase
         $this->assertFalse($test_font->isInstalledFont('IPAMincho'));
         TestFont::_addInstalledBuiltinFont('IPAMincho');
         $this->assertTrue($test_font->isInstalledFont('IPAMincho'));
-    }
-
-    function unicodeFontProvider()
-    {
-        return [
-            ['ipam', 'IPAMincho'],
-            ['ipag', 'IPAGothic'],
-            ['ipamp', 'IPAPMincho'],
-            ['ipagp', 'IPAPGothic']
-        ];
     }
 }

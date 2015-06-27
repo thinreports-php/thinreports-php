@@ -112,11 +112,7 @@ trait Graphics
      */
     public function drawImage($filename, $x, $y, $width, $height, array $attrs = [])
     {
-        $align  = array_key_exists('align', $attrs)  ? $attrs['align']  : 'left';
-        $valign = array_key_exists('valign', $attrs) ? $attrs['valign'] : 'top';
-
-        $position = self::$pdf_image_align[$align] .
-                    self::$pdf_image_valign[$valign];
+        $position = $this->buildImagePosition($attrs);
 
         $this->pdf->Image(
             $filename,  // image file
@@ -187,17 +183,25 @@ trait Graphics
 
             $stroke_style = [
                 'width' => $attrs['stroke_width'],
-                'color' => $stroke_color ?: [],
-                'dash'  => $stroke_dash ?: []
+                'color' => $stroke_color,
+                'dash'  => $stroke_dash
             ];
         }
 
-        if ($attrs['fill_color'] === 'none') {
-            $fill_color = null;
-        } else {
+        if (array_key_exists('fill_color', $attrs) && $attrs['fill_color'] !== 'none') {
             $fill_color = $this->parseColor($attrs['fill_color']);
+        } else {
+            $fill_color = [];
         }
 
         return ['stroke' => $stroke_style, 'fill' => $fill_color];
+    }
+
+    public function buildImagePosition(array $attrs)
+    {
+        $align  = array_key_exists('align', $attrs)  ? $attrs['align']  : 'left';
+        $valign = array_key_exists('valign', $attrs) ? $attrs['valign'] : 'top';
+
+        return self::$pdf_image_align[$align] . self::$pdf_image_valign[$valign];
     }
 }

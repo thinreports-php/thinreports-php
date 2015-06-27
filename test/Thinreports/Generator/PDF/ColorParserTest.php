@@ -27,8 +27,8 @@ class ColorParserTest extends TestCase
     function colorPatternProvider()
     {
         return [
-            [null, ''],
-            [null, null],
+            [[], ''],
+            [[], null],
             [[0, 0, 0], '#000000'],
             [[0, 0, 0], '000000'],
             [[199, 184, 55], '#c7b837'],

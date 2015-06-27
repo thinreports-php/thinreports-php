@@ -40,7 +40,7 @@ trait ColorParser
     public function parseColor($hex_or_name)
     {
         if (empty($hex_or_name)) {
-            return null;
+            return [];
         }
 
         if (array_key_exists($hex_or_name, self::$color_names)) {
