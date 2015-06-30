@@ -61,8 +61,9 @@ class TextStyleTest extends TestCase
     }
 
     /**
-     * @covers TextStyle::set_bold
-     * @covers TextStyle::get_bold
+     * Tests for:
+     *      TextStyle::set_bold
+     *      TextStyle::get_bold
      */
     function test_bold()
     {

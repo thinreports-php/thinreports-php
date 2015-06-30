@@ -43,8 +43,9 @@ class BasicStyleTest extends TestCase
     }
 
     /**
-     * @covers BasicStyle::set
-     * @covers BasicStyle::verifyStyleName
+     * Tests for:
+     *      BasicStyle::set
+     *      BasicStyle::verifyStyleName
      */
     function test_set()
     {
@@ -60,8 +61,9 @@ class BasicStyleTest extends TestCase
     }
 
     /**
-     * @covers BasicStyle::get
-     * @covers BasicStyle::verifyStyleName
+     * Tests for:
+     *      BasicStyle::get
+     *      BasicStyle::verifyStyleName
      */
     function test_get()
     {

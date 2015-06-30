@@ -29,10 +29,11 @@ class AbstractItemTest extends TestCase
     }
 
     /**
-     * @covers AbstractItem::isVisible
-     * @covers AbstractItem::setVisible
-     * @covers AbstractItem::show
-     * @covers AbstractItem::hide
+     * Tests for:
+     *      AbstractItem::isVisible
+     *      AbstractItem::setVisible
+     *      AbstractItem::show
+     *      AbstractItem::hide
      */
     function test_isVisible()
     {
@@ -66,9 +67,10 @@ class AbstractItemTest extends TestCase
     }
 
     /**
-     * @covers AbstractItem::getId
-     * @covers AbstractItem::getType
-     * @covers AbstractItem::getSVGAttributes
+     * Tests for:
+     *      AbstractItem::getId
+     *      AbstractItem::getType
+     *      AbstractItem::getSVGAttributes
      */
     function test_getters_for_Item_attribute()
     {

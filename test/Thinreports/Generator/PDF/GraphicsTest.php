@@ -197,10 +197,6 @@ class GraphicsTest extends TestCase
         );
     }
 
-    /**
-     * @covers Graphics::drawBase64Image
-     * @covers Graphics::clearRegisteredImages
-     */
     function test_drawBase64Image()
     {
         $base64_image = file_get_contents($this->dataDir() . '/image.png.base64');

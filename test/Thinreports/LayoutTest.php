@@ -146,13 +146,14 @@ SVG;
     }
 
     /**
-     * @covers Layout::getLastVersion
-     * @covers Layout::getReportTitle
-     * @covers Layout::getPagePaperType
-     * @covers Layout::isUserPaperType
-     * @covers Layout::isPortraitPage
-     * @covers Layout::getPageSize
-     * @covers Layout::getSVG
+     * Tests for:
+     *      Layout::getLastVersion
+     *      Layout::getReportTitle
+     *      Layout::getPagePaperType
+     *      Layout::isUserPaperType
+     *      Layout::isPortraitPage
+     *      Layout::getPageSize
+     *      Layout::getSVG
      */
     function test_getters_for_Layout_configuration()
     {

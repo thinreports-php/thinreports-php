@@ -24,8 +24,9 @@ class TestFormattableItem
 class FormattableTest extends TestCase
 {
     /**
-     * @covers Formattable::getFormattedValue
-     * @covers Formattable::applyNumberFormat
+     * Tests for:
+     *      Formattable::getFormattedValue
+     *      Formattable::applyNumberFormat
      */
     function test_number_format()
     {

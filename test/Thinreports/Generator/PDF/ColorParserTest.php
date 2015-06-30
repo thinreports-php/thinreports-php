@@ -11,9 +11,6 @@ class TestColorParser
 class ColorParserTest extends TestCase
 {
     /**
-     * @covers ColorParser::parseColor
-     * @covers ColorParser::hexToRgb
-     *
      * @dataProvider colorPatternProvider
      */
     function test_parseColor($expected_result, $color)
