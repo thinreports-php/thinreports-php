@@ -30,9 +30,13 @@ Please see the following pages for further details.
   * [Discussion Group on Gitter](https://gitter.im/thinreports-php/thinreports-php?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
   * [Development Community](#development-community)
 
-## Supported versions
+## Requirements
 
   * PHP 5.6
+
+## Compatibility with Thinreports
+
+  * Thinreports Editor >= 0.8
 
 ## Quick Start
 
