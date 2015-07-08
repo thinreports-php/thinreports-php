@@ -1,5 +1,7 @@
 # Thinreports Generator for PHP
 
+[![Latest Stable Version](https://poser.pugx.org/thinreports-php/thinreports-php/version)](https://packagist.org/packages/thinreports-php/thinreports-php)
+[![Latest Unstable Version](https://poser.pugx.org/thinreports-php/thinreports-php/v/unstable)](//packagist.org/packages/thinreports-php/thinreports-php)
 [![Build Status](https://travis-ci.org/thinreports-php/thinreports-php.svg)](https://travis-ci.org/thinreports-php/thinreports-php)
 [![Code Climate](https://codeclimate.com/github/thinreports-php/thinreports-php/badges/gpa.svg)](https://codeclimate.com/github/thinreports-php/thinreports-php)
 [![Coverage Status](https://coveralls.io/repos/thinreports-php/thinreports-php/badge.svg?branch=master)](https://coveralls.io/r/thinreports-php/thinreports-php?branch=master)
@@ -21,16 +23,10 @@ Please see the following pages for further details.
   * [Thinreports official site](http://www.thinreports.org)
   * [Thinreports GitHub](https://github.com/thinreports)
 
-## Status
-
-[![Latest Stable Version](https://poser.pugx.org/thinreports-php/thinreports-php/version)](https://packagist.org/packages/thinreports-php/thinreports-php)
-[![Latest Unstable Version](https://poser.pugx.org/thinreports-php/thinreports-php/v/unstable)](//packagist.org/packages/thinreports-php/thinreports-php)
-
-  * [Roadmap](https://github.com/thinreports-php/thinreports-php/milestones)
-
 ## Getting Started
 
   * [Features](#features)
+  * [Roadmap](https://github.com/thinreports-php/thinreports-php/milestones)
   * [Quick Start](#quick-start)
   * [Quick Reference](#quick-reference)
   * [Discussion Group on Gitter](https://gitter.im/thinreports-php/thinreports-php?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
