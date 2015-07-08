@@ -34,6 +34,8 @@ class FontTest extends TestCase
     {
         $test_font = new TestFont();
 
+        $this->assertEquals('Helvetica', $test_font->getFontName('Helvetica'));
+
         $this->assertEquals('Courier', $test_font->getFontName('Courier New'));
         $this->assertEquals('Times', $test_font->getFontName('Times New Roman'));
 
