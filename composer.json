@@ -30,6 +30,11 @@
   "autoload-dev": {
     "psr-4": { "Thinreports\\": "test/Thinreports" }
   },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.8.0-dev"
+    }
+  },
   "scripts": {
     "test": "phpunit"
   }
