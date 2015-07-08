@@ -1,7 +1,5 @@
 # Thinreports Generator for PHP
 
-[![Latest Stable Version](https://poser.pugx.org/thinreports-php/thinreports-php/version)](https://packagist.org/packages/thinreports-php/thinreports-php)
-[![Latest Unstable Version](https://poser.pugx.org/thinreports-php/thinreports-php/v/unstable)](//packagist.org/packages/thinreports-php/thinreports-php)
 [![Build Status](https://travis-ci.org/thinreports-php/thinreports-php.svg)](https://travis-ci.org/thinreports-php/thinreports-php)
 [![Code Climate](https://codeclimate.com/github/thinreports-php/thinreports-php/badges/gpa.svg)](https://codeclimate.com/github/thinreports-php/thinreports-php)
 [![Coverage Status](https://coveralls.io/repos/thinreports-php/thinreports-php/badge.svg?branch=master)](https://coveralls.io/r/thinreports-php/thinreports-php?branch=master)
@@ -22,6 +20,13 @@ Please see the following pages for further details.
 
   * [Thinreports official site](http://www.thinreports.org)
   * [Thinreports GitHub](https://github.com/thinreports)
+
+## Status
+
+[![Latest Stable Version](https://poser.pugx.org/thinreports-php/thinreports-php/version)](https://packagist.org/packages/thinreports-php/thinreports-php)
+[![Latest Unstable Version](https://poser.pugx.org/thinreports-php/thinreports-php/v/unstable)](//packagist.org/packages/thinreports-php/thinreports-php)
+
+  * [Roadmap](https://github.com/thinreports-php/thinreports-php/milestones)
 
 ## Getting Started
 
@@ -50,7 +55,7 @@ See the [Official Installation Guide](http://www.thinreports.org/documentation/e
 Put this line in your composer.json:
 
     "require": {
-      "thinreports-php/thinreports-php": "dev-master"
+      "thinreports-php/thinreports-php": "0.8.0@alpha"
     }
 
 Then `composer install` or `composer update`:
@@ -91,8 +96,13 @@ $page('hello')->hide();
 
 // 4th page
 $report->addPage(function ($new_page) {
-    $new_page->setItemValues(['world' => 'Japan', 'thinreports' => 'PDF']);
+    $new_page->item('world')->setValue('Japan');
 });
+
+// 5th page
+$page = $report->addPage();
+$page->setItemValue('thinreports', 'PDF');
+$page->setItemValues(['world' => 'PHP']);
 
 $report->generate('hello_world.pdf');
 ```
