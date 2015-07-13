@@ -13,6 +13,14 @@ cache:
   directories:
     - $HOME/.composer/cache
 
+notifications:
+  webhooks:
+    uris:
+      - https://webhooks.gitter.im/e/27e6f370d800d3c06e68
+    on_success: change
+    on_failure: always
+    on_start: never
+
 before_script:
   - composer install --dev
   - mkdir -p build/logs
