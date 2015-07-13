@@ -15,7 +15,7 @@ cache:
 
 notifications:
   webhooks:
-    uris:
+    urls:
       - https://webhooks.gitter.im/e/27e6f370d800d3c06e68
     on_success: change
     on_failure: always
