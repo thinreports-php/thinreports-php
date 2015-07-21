@@ -51,7 +51,7 @@ See the [Official Installation Guide](http://www.thinreports.org/documentation/e
 Put this line in your composer.json:
 
     "require": {
-      "thinreports-php/thinreports-php": "0.8.0@alpha"
+      "thinreports-php/thinreports-php": "@alpha"
     }
 
 Then `composer install` or `composer update`:
