@@ -14,8 +14,6 @@ use Thinreports\Item\Style\TextStyle;
 
 class PageNumberItem extends AbstractItem
 {
-    use Stylable;
-
     const TYPE_NAME = 's-pageno';
 
     static protected $serial_number = 1;
@@ -86,8 +84,8 @@ class PageNumberItem extends AbstractItem
         $page   = $this->getParent();
         $report = $page->getReport();
 
-        return str_replace(['{page}', '{total}'],
-                           [$page->getNo(), $report->getLastPageNumber()],
+        return str_replace(array('{page}', '{total}'),
+                           array($page->getNo(), $report->getLastPageNumber()),
                            $format);
     }
 

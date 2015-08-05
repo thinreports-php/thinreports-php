@@ -18,28 +18,11 @@ class ReportTest extends TestCase
         $this->assertInstanceOf('Thinreports\Page\Page', $page);
         $this->assertTrue($page->isCountable());
 
-        $page = $report->addPage(function ($new_page) {});
-        $this->assertInstanceOf('Thinreports\Page\Page', $page);
+        $page = $report->addPage(array('count' => true));
         $this->assertTrue($page->isCountable());
 
-        $page = $report->addPage(['count' => false]);
+        $page = $report->addPage(array('count' => false));
         $this->assertFalse($page->isCountable());
-
-        $has_called = false;
-
-        $report->addPage(function ($new_page) use (&$has_called) {
-            $this->assertInstanceOf('Thinreports\Page\Page', $new_page);
-            $has_called = true;
-        });
-        $this->assertTrue($has_called);
-
-        $has_called = false;
-
-        $report->addPage(['count' => false], function ($new_page) use (&$has_called) {
-            $this->assertInstanceOf('Thinreports\Page\Page', $new_page);
-            $has_called = true;
-        });
-        $this->assertTrue($has_called);
     }
 
     function test_addBlankPage()
@@ -50,10 +33,10 @@ class ReportTest extends TestCase
         $this->assertInstanceOf('Thinreports\Page\BlankPage', $page);
         $this->assertTrue($page->isCountable());
 
-        $page = $report->addBlankPage(['count' => true]);
+        $page = $report->addBlankPage(array('count' => true));
         $this->assertTrue($page->isCountable());
 
-        $page = $report->addBlankPage(['count' => false]);
+        $page = $report->addBlankPage(array('count' => false));
         $this->assertFalse($page->isCountable());
     }
 
@@ -68,8 +51,8 @@ class ReportTest extends TestCase
 
         $this->assertEquals(2, $report->getPageCount());
 
-        $report->addPage(['count' => false]);
-        $report->addBlankPage(['count' => false]);
+        $report->addPage(array('count' => false));
+        $report->addBlankPage(array('count' => false));
 
         $this->assertEquals(2, $report->getPageCount());
     }
@@ -114,11 +97,11 @@ class ReportTest extends TestCase
     {
         $report = $this->report;
 
-        $pages = [
+        $pages = array(
             $report->addPage(),
             $report->addPage(),
             $report->addBlankPage()
-        ];
+        );
         $this->assertEquals($pages, $report->getPages());
     }
 

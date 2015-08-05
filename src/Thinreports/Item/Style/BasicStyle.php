@@ -16,8 +16,8 @@ use Thinreports\Exception;
  */
 class BasicStyle
 {
-    static protected $available_style_names = [];
-    protected $styles = [];
+    static protected $available_style_names = array();
+    protected $styles = array();
 
     /**
      * @param array $item_format
@@ -101,6 +101,6 @@ class BasicStyle
      */
     protected function initializeStyles(array $item_format)
     {
-        $this->styles = $item_format['svg']['attrs'] ?: [];
+        $this->styles = $item_format['svg']['attrs'] ?: array();
     }
 }

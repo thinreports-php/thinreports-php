@@ -19,8 +19,10 @@ class StandardException extends \Exception
     /**
      * @param string $messages,...
      */
-    public function __construct(...$messages)
+    public function __construct($messages)
     {
+        $messages = func_get_args();
+
         if (count($messages) > 1) {
             $this->subject = $messages[0];
         }

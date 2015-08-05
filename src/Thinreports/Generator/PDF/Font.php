@@ -12,40 +12,40 @@ namespace Thinreports\Generator\PDF;
 /**
  * @access private
  */
-trait Font
+class Font
 {
     /**
      * @var string[]
      */
-    static private $installed_builtin_fonts = [];
+    static public $installed_builtin_fonts = array();
 
-    static private $builtin_unicode_fonts = [
+    static public $builtin_unicode_fonts = array(
         'IPAMincho'  => 'ipam.ttf',
         'IPAPMincho' => 'ipamp.ttf',
         'IPAGothic'  => 'ipag.ttf',
         'IPAPGothic' => 'ipagp.ttf'
-    ];
+    );
 
-    static private $builtin_font_aliases = [
+    static public $builtin_font_aliases = array(
         'Courier New'     => 'Courier',
         'Times New Roman' => 'Times'
-    ];
+    );
 
     /**
      * @param string $name
      * @return string
      */
-    public function getFontName($name)
+    static public function getFontName($name)
     {
         if (array_key_exists($name, self::$builtin_font_aliases)) {
             return self::$builtin_font_aliases[$name];
         }
 
         if (array_key_exists($name, self::$builtin_unicode_fonts)) {
-            if ($this->isInstalledFont($name)) {
+            if (self::isInstalledFont($name)) {
                 return static::$installed_builtin_fonts[$name];
             } else {
-                return $this->installBuiltinFont($name);
+                return self::installBuiltinFont($name);
             }
         }
         return $name;
@@ -56,9 +56,9 @@ trait Font
      * @return string
      * @see http://www.tcpdf.org/doc/code/classTCPDF__FONTS.html
      */
-    public function installBuiltinFont($name)
+    static public function installBuiltinFont($name)
     {
-        $filename = $this->getBuiltinFontPath($name);
+        $filename = self::getBuiltinFontPath($name);
 
         $font_name = \TCPDF_FONTS::addTTFFont($filename, 'TrueTypeUnicode', '', 32);
         static::$installed_builtin_fonts[$name] = $font_name;
@@ -70,7 +70,7 @@ trait Font
      * @param string $name
      * @return boolean
      */
-    public function isInstalledFont($name)
+    static public function isInstalledFont($name)
     {
         return array_key_exists($name, static::$installed_builtin_fonts);
     }
@@ -79,7 +79,7 @@ trait Font
      * @param string $name
      * @return string
      */
-    public function getBuiltinFontPath($name)
+    static public function getBuiltinFontPath($name)
     {
         $font_directory = realpath(__DIR__ . '/../../../../fonts');
         return $font_directory . '/' . self::$builtin_unicode_fonts[$name];
@@ -89,7 +89,7 @@ trait Font
      * @param string $name
      * @return boolean
      */
-    public function isBuiltinUnicodeFont($name)
+    static public function isBuiltinUnicodeFont($name)
     {
         return in_array($name, array_keys(static::$builtin_unicode_fonts));
     }

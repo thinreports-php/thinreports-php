@@ -12,28 +12,41 @@ namespace Thinreports\Generator\PDF;
 /**
  * @access private
  */
-trait Text
+class Text
 {
-    static private $pdf_font_style = [
+    static private $pdf_font_style = array(
         'bold'          => 'B',
         'italic'        => 'I',
         'underline'     => 'U',
         'strikethrough' => 'D'
-    ];
+    );
 
-    static private $pdf_text_align = [
+    static private $pdf_text_align = array(
         'left'   => 'L',
         'center' => 'C',
         'right'  => 'R'
-    ];
+    );
 
-    static private $pdf_text_valign = [
+    static private $pdf_text_valign = array(
         'top'    => 'T',
         'center' => 'M',
         'bottom' => 'B'
-    ];
+    );
 
     static private $pdf_default_line_height = 1;
+
+    /**
+     * @var \TCPDF
+     */
+    private $pdf;
+
+    /**
+     * @param \TCPDF
+     */
+    public function __construct(\TCPDF $pdf)
+    {
+        $this->pdf = $pdf;
+    }
 
     /**
      * @param string $content
@@ -55,7 +68,7 @@ trait Text
      * }
      * @see http://www.tcpdf.org/doc/code/classTCPDF.html
      */
-    public function drawTextBox($content, $x, $y, $width, $height, array $attrs = [])
+    public function drawTextBox($content, $x, $y, $width, $height, array $attrs = array())
     {
         $styles = $this->buildTextBoxStyles($height, $attrs);
 
@@ -98,7 +111,7 @@ trait Text
     /**
      * {@see self::drawTextBox}
      */
-    public function drawText($content, $x, $y, $width, $height, array $attrs = [])
+    public function drawText($content, $x, $y, $width, $height, array $attrs = array())
     {
         $content = str_replace("\n", ' ', $content);
         $attrs['single_row'] = true;
@@ -125,12 +138,11 @@ trait Text
      */
     public function buildTextStyles(array $attrs)
     {
-        $font_style = array_map(
-            function ($style) {
-                return self::$pdf_font_style[$style];
-            },
-            $attrs['font_style'] ?: []
-        );
+        $font_style = array();
+
+        foreach ($attrs['font_style'] ?: array() as $style) {
+            $font_style[] = self::$pdf_font_style[$style];
+        }
 
         if (array_key_exists('line_height', $attrs)) {
             $line_height = $attrs['line_height'];
@@ -156,16 +168,16 @@ trait Text
             $valign = 'top';
         }
 
-        return [
+        return array(
             'font_size'      => $attrs['font_size'],
-            'font_family'    => $this->getFontName($attrs['font_family']),
+            'font_family'    => Font::getFontName($attrs['font_family']),
             'font_style'     => implode('', $font_style),
-            'color'          => $this->parseColor($attrs['color']),
+            'color'          => ColorParser::parse($attrs['color']),
             'align'          => self::$pdf_text_align[$align],
             'valign'         => self::$pdf_text_valign[$valign],
             'line_height'    => $line_height,
             'letter_spacing' => $letter_spacing
-        ];
+        );
     }
 
     /**
@@ -204,10 +216,10 @@ trait Text
 
         $styles = $this->buildTextStyles($attrs);
 
-        $styles['overflow'] = [
+        $styles['overflow'] = array(
             'fit_cell'   => $fit_cell,
             'max_height' => $max_height
-        ];
+        );
 
         return $styles;
     }
@@ -221,7 +233,7 @@ trait Text
     public function startStyleEmulation($family, array $styles, array $color)
     {
         $need_emulate = in_array('bold', $styles)
-                        && $this->isBuiltinUnicodeFont($family);
+                        && Font::isBuiltinUnicodeFont($family);
 
         if (!$need_emulate) {
             return false;

@@ -3,51 +3,29 @@ namespace Thinreports\Generator\PDF;
 
 use Thinreports\TestCase;
 
-class TestFont
-{
-    use Font;
-
-    static public function _getInstalledBuiltinFonts()
-    {
-        return static::$installed_builtin_fonts;
-    }
-
-    static public function _addInstalledBuiltinFont($font_name)
-    {
-        static::$installed_builtin_fonts[$font_name] = 'ipam';
-    }
-
-    static public function _resetInstalledBuiltinFonts()
-    {
-        static::$installed_builtin_fonts = [];
-    }
-}
-
 class FontTest extends TestCase
 {
     function setup()
     {
-        TestFont::_resetInstalledBuiltinFonts();
+        Font::$installed_builtin_fonts = array();
     }
 
     function test_getFontName()
     {
-        $test_font = new TestFont();
+        $this->assertEquals('Helvetica', Font::getFontName('Helvetica'));
 
-        $this->assertEquals('Helvetica', $test_font->getFontName('Helvetica'));
+        $this->assertEquals('Courier', Font::getFontName('Courier New'));
+        $this->assertEquals('Times', Font::getFontName('Times New Roman'));
 
-        $this->assertEquals('Courier', $test_font->getFontName('Courier New'));
-        $this->assertEquals('Times', $test_font->getFontName('Times New Roman'));
+        $this->assertFalse(Font::isInstalledFont('IPAMincho'));
+        $this->assertNotContains('ipam', Font::$installed_builtin_fonts);
 
-        $this->assertFalse($test_font->isInstalledFont('IPAMincho'));
-        $this->assertNotContains('ipam', TestFont::_getInstalledBuiltinFonts());
+        $this->assertEquals('ipam', Font::getFontName('IPAMincho'));
 
-        $this->assertEquals('ipam', $test_font->getFontName('IPAMincho'));
+        $this->assertTrue(Font::isInstalledFont('IPAMincho'));
+        $this->assertContains('ipam', Font::$installed_builtin_fonts);
 
-        $this->assertTrue($test_font->isInstalledFont('IPAMincho'));
-        $this->assertContains('ipam', TestFont::_getInstalledBuiltinFonts());
-
-        $this->assertEquals('ipam', $test_font->getFontName('IPAMincho'));
+        $this->assertEquals('ipam', Font::getFontName('IPAMincho'));
     }
 
     /**
@@ -55,38 +33,32 @@ class FontTest extends TestCase
      */
     function test_installBuiltinFont($expected_result, $font_name)
     {
-        $test_font = new TestFont();
-
-        $actual = $test_font->installBuiltinFont($font_name);
+        $actual = Font::installBuiltinFont($font_name);
 
         $this->assertEquals($expected_result, $actual);
-        $this->assertContains($actual, $test_font->_getInstalledBuiltinFonts());
+        $this->assertContains($actual, Font::$installed_builtin_fonts);
     }
     function unicodeFontProvider()
     {
-        return [
-            ['ipam', 'IPAMincho'],
-            ['ipag', 'IPAGothic'],
-            ['ipamp', 'IPAPMincho'],
-            ['ipagp', 'IPAPGothic']
-        ];
+        return array(
+            array('ipam', 'IPAMincho'),
+            array('ipag', 'IPAGothic'),
+            array('ipamp', 'IPAPMincho'),
+            array('ipagp', 'IPAPGothic')
+        );
     }
 
     function test_isBuiltinUnicodeFont()
     {
-        $test_font = new TestFont();
-
-        $this->assertFalse($test_font->isBuiltinUnicodeFont('unknown font'));
-        $this->assertFalse($test_font->isBuiltinUnicodeFont('Helvetica'));
-        $this->assertTrue($test_font->isBuiltinUnicodeFont('IPAGothic'));
+        $this->assertFalse(Font::isBuiltinUnicodeFont('unknown font'));
+        $this->assertFalse(Font::isBuiltinUnicodeFont('Helvetica'));
+        $this->assertTrue(Font::isBuiltinUnicodeFont('IPAGothic'));
     }
 
     function test_isInstalledFont()
     {
-        $test_font = new TestFont();
-
-        $this->assertFalse($test_font->isInstalledFont('IPAMincho'));
-        TestFont::_addInstalledBuiltinFont('IPAMincho');
-        $this->assertTrue($test_font->isInstalledFont('IPAMincho'));
+        $this->assertFalse(Font::isInstalledFont('IPAMincho'));
+        Font::$installed_builtin_fonts['IPAMincho'] = 'ipam';
+        $this->assertTrue(Font::isInstalledFont('IPAMincho'));
     }
 }

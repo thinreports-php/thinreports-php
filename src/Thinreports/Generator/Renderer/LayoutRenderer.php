@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Thinreports\Generator;
+namespace Thinreports\Generator\Renderer;
 
 use Thinreports\Layout;
 use Thinreports\Generator\PDF;
@@ -16,17 +16,25 @@ use Thinreports\Exception;
 /**
  * @access private
  */
-class LayoutRenderer
+class LayoutRenderer extends AbstractRenderer
 {
-    use StyleBuilder;
+    private $items = array();
 
-    private $items = [];
+    /**
+     * @param PDF\Document $doc
+     * @param Layout $layout
+     */
+    public function __construct(PDF\Document $doc, Layout $layout)
+    {
+        parent::__construct($doc);
+        $this->items = $this->parse($layout);
+    }
 
     /**
      * @param Layout $layout
-     * @return self
+     * @return array()
      */
-    static public function parse(Layout $layout)
+    public function parse(Layout $layout)
     {
         $svg = preg_replace('<%.+?%>', '', $layout->getSVG());
 
@@ -34,7 +42,7 @@ class LayoutRenderer
         $xml->registerXPathNamespace('svg', 'http://www.w3.org/2000/svg');
         $xml->registerXPathNamespace('xlink', 'http://www.w3.org/1999/xlink');
 
-        $items = [];
+        $items = array();
 
         foreach ($xml->g->children() as $element) {
             $attributes = (array) $element->attributes();
@@ -42,7 +50,7 @@ class LayoutRenderer
 
             switch ($attributes['class']) {
                 case 's-text':
-                    $text_lines = [];
+                    $text_lines = array();
 
                     foreach ($element->text as $text_line) {
                         $text_lines[] = $text_line;
@@ -50,46 +58,36 @@ class LayoutRenderer
                     $attributes['content'] = implode("\n", $text_lines);
                     break;
                 case 's-image':
-                    $attributes['xlink:href'] = (string) $element->attributes('xlink', true)['href'];
+                    $xlink_attribute = $element->attributes('xlink', true);
+                    $attributes['xlink:href'] = (string) $xlink_attribute['href'];
                     break;
             }
 
             $items[] = $attributes;
         }
-        return new self($items);
+        return $items;
     }
 
-    /**
-     * @param array $items
-     */
-    public function __construct(array $items)
-    {
-        $this->items = $items;
-    }
-
-    /**
-     * @param PDF\Document $pdf
-     */
-    public function renderTo(PDF\Document $pdf)
+    public function render()
     {
         foreach ($this->items as $attributes) {
             $type_name = $attributes['class'];
 
             switch ($type_name) {
                 case 's-text':
-                    $this->renderSVGText($pdf, $attributes);
+                    $this->renderSVGText($attributes);
                     break;
                 case 's-image':
-                    $this->renderSVGImage($pdf, $attributes);
+                    $this->renderSVGImage($attributes);
                     break;
                 case 's-rect':
-                    $this->renderSVGRect($pdf, $attributes);
+                    $this->renderSVGRect($attributes);
                     break;
                 case 's-ellipse':
-                    $this->renderSVGEllipse($pdf, $attributes);
+                    $this->renderSVGEllipse($attributes);
                     break;
                 case 's-line':
-                    $this->renderSVGLine($pdf, $attributes);
+                    $this->renderSVGLine($attributes);
                     break;
                 default:
                     throw new Exception\StandardException('Unknown Element', $type_name);
@@ -99,10 +97,9 @@ class LayoutRenderer
     }
 
     /**
-     * @param PDF\Document $pdf
      * @param array $svg_attrs
      */
-    public function renderSVGText(PDF\Document $pdf, array $svg_attrs)
+    public function renderSVGText(array $svg_attrs)
     {
         $styles = $this->buildTextStyles($svg_attrs);
 
@@ -118,7 +115,7 @@ class LayoutRenderer
             $styles['line_height'] = $svg_attrs['x-line-height-ratio'];
         }
 
-        $pdf->drawTextBox(
+        $this->doc->text->drawTextBox(
             $svg_attrs['content'],
             $svg_attrs['x-left'],
             $svg_attrs['x-top'],
@@ -129,15 +126,14 @@ class LayoutRenderer
     }
 
     /**
-     * @param PDF\Document $pdf
      * @param array $svg_attrs
      */
-    public function renderSVGRect(PDF\Document $pdf, array $svg_attrs)
+    public function renderSVGRect(array $svg_attrs)
     {
         $styles = $this->buildGraphicStyles($svg_attrs);
         $styles['radius'] = $svg_attrs['rx'];
 
-        $pdf->drawRect(
+        $this->doc->graphics->drawRect(
             $svg_attrs['x'],
             $svg_attrs['y'],
             $svg_attrs['width'],
@@ -147,12 +143,11 @@ class LayoutRenderer
     }
 
     /**
-     * @param PDF\Document $pdf
      * @param array $svg_attrs
      */
-    public function renderSVGEllipse(PDF\Document $pdf, array $svg_attrs)
+    public function renderSVGEllipse(array $svg_attrs)
     {
-        $pdf->drawEllipse(
+        $this->doc->graphics->drawEllipse(
             $svg_attrs['cx'],
             $svg_attrs['cy'],
             $svg_attrs['rx'],
@@ -162,12 +157,11 @@ class LayoutRenderer
     }
 
     /**
-     * @param PDF\Document $pdf
      * @param array $svg_attrs
      */
-    public function renderSVGLine(PDF\Document $pdf, array $svg_attrs)
+    public function renderSVGLine(array $svg_attrs)
     {
-        $pdf->drawLine(
+        $this->doc->graphics->drawLine(
             $svg_attrs['x1'],
             $svg_attrs['y1'],
             $svg_attrs['x2'],
@@ -177,12 +171,11 @@ class LayoutRenderer
     }
 
     /**
-     * @param PDF\Document $pdf
      * @param array $svg_attrs
      */
-    public function renderSVGImage(PDF\Document $pdf, array $svg_attrs)
+    public function renderSVGImage(array $svg_attrs)
     {
-        $pdf->drawBase64Image(
+        $this->doc->graphics->drawBase64Image(
             $this->extractBase64Data($svg_attrs),
             $svg_attrs['x'],
             $svg_attrs['y'],

@@ -14,8 +14,6 @@ use Thinreports\Item\Style\BasicStyle;
 
 class ImageBlockItem extends AbstractBlockItem
 {
-    use Stylable;
-
     const TYPE_NAME = 's-iblock';
 
     /**
@@ -33,7 +31,7 @@ class ImageBlockItem extends AbstractBlockItem
      */
     public function setSource()
     {
-        return call_user_func_array([$this, 'setValue'], func_get_args());
+        return call_user_func_array(array($this, 'setValue'), func_get_args());
     }
 
     /**
@@ -41,6 +39,6 @@ class ImageBlockItem extends AbstractBlockItem
      */
     public function getSource()
     {
-        return call_user_func([$this, 'getValue']);
+        return call_user_func(array($this, 'getValue'));
     }
 }

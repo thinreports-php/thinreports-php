@@ -6,27 +6,29 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Thinreports\Item;
 
-trait Formattable
+class TextFormatter
 {
+    private $format = array();
+
+    public function __construct(array $format)
+    {
+        $this->format = $format;
+    }
+
     /**
-     * @access private
-     *
+     * @param mixed $value
      * @return mixed
      */
-    public function getFormattedValue()
+    public function format($value)
     {
-        $format = $this->format['format'];
-        $value  = $this->getValue();
-
         if (is_null($value) || $value === '') {
             return $value;
         }
 
-        if (!empty($format['type'])) {
-            switch ($format['type']) {
+        if (!empty($this->format['type'])) {
+            switch ($this->format['type']) {
                 case 'number':
                     $value = $this->applyNumberFormat($value);
                     break;
@@ -39,7 +41,7 @@ trait Formattable
             }
         }
 
-        if (!empty($format['base'])) {
+        if (!empty($this->format['base'])) {
             $value = $this->applyBaseFormat($value);
         }
         return $value;
@@ -56,7 +58,7 @@ trait Formattable
         if (!is_numeric($value)) {
             return $value;
         }
-        $number_format = $this->format['format']['number'];
+        $number_format = $this->format['number'];
 
         $precision = $number_format['precision'] ?: 0;
         $delimiter = $number_format['delimiter'];
@@ -72,7 +74,7 @@ trait Formattable
      */
     private function applyDateTimeFormat($value)
     {
-        $datetime_format = $this->format['format']['datetime'];
+        $datetime_format = $this->format['datetime'];
 
         if (empty($datetime_format['format'])) {
             return $value;
@@ -95,7 +97,7 @@ trait Formattable
      */
     private function applyPaddingFormat($value)
     {
-        $padding_format = $this->format['format']['padding'];
+        $padding_format = $this->format['padding'];
 
         $character = $padding_format['char'];
         $direction = $padding_format['direction'];
@@ -104,7 +106,7 @@ trait Formattable
         if (is_null($character) || $character === '' || $length === 0) {
             return $value;
         }
-        if (mb_strlen($value) >= $length) {
+        if (mb_strlen($value, 'UTF-8') >= $length) {
             return $value;
         }
 
@@ -119,7 +121,7 @@ trait Formattable
      */
     private function applyBaseFormat($value)
     {
-        $base_format = $this->format['format']['base'];
+        $base_format = $this->format['base'];
         $pattern = '/\{value\}/';
 
         if (preg_match($pattern, $base_format)) {
@@ -140,7 +142,7 @@ trait Formattable
      */
     private function padChars($direction, $string, $padstr, $length)
     {
-        while (mb_strlen($string) < $length) {
+        while (mb_strlen($string, 'UTF-8') < $length) {
             if ($direction == 'L') {
                 $string = $padstr . $string;
             } else {
@@ -148,13 +150,13 @@ trait Formattable
             }
         }
 
-        $string_length = mb_strlen($string);
+        $string_length = mb_strlen($string, 'UTF-8');
 
         if ($string_length > $length) {
             if ($direction == 'L') {
-                $string = mb_substr($string, $string_length - $length);
+                $string = mb_substr($string, $string_length - $length, $string_length, 'UTF-8');
             } else {
-                $string = mb_substr($string, 0, $length);
+                $string = mb_substr($string, 0, $length, 'UTF-8');
             }
         }
 

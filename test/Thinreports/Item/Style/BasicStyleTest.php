@@ -6,7 +6,7 @@ use Thinreports\Exception;
 
 class TestStyle extends BasicStyle
 {
-    static protected $available_style_names = ['style_a'];
+    static protected $available_style_names = array('style_a');
 
     public function set_style_a($value)
     {
@@ -26,19 +26,19 @@ class BasicStyleTest extends TestCase
 
     function setup()
     {
-        $item_format = [
-            'svg' => [
-                'attrs' => [
+        $item_format = array(
+            'svg' => array(
+                'attrs' => array(
                     'style_a' => 'style_a_value',
-                ]
-            ]
-        ];
+                )
+            )
+        );
         $this->test_style = new TestStyle($item_format);
     }
 
     function test_initialize()
     {
-        $this->assertAttributeSame(['style_a' => 'style_a_value'],
+        $this->assertAttributeSame(array('style_a' => 'style_a_value'),
             'styles', $this->test_style);
     }
 
@@ -57,7 +57,8 @@ class BasicStyleTest extends TestCase
         }
 
         $this->test_style->set('style_a', 'new value');
-        $this->assertAttributeSame(['style_a' => 'new value'], 'styles', $this->test_style);
+        $this->assertAttributeSame(array('style_a' => 'new value'),
+            'styles', $this->test_style);
     }
 
     /**
@@ -79,10 +80,10 @@ class BasicStyleTest extends TestCase
 
     function test_export()
     {
-        $this->assertSame(['style_a' => 'style_a_value'], $this->test_style->export());
+        $this->assertSame(array('style_a' => 'style_a_value'), $this->test_style->export());
 
         $this->test_style->set('style_a', 'new value');
-        $this->assertSame(['style_a' => 'new value'], $this->test_style->export());
+        $this->assertSame(array('style_a' => 'new value'), $this->test_style->export());
     }
 
     function test_readStyle()
@@ -95,7 +96,7 @@ class BasicStyleTest extends TestCase
     {
         try {
             $this->test_style->verifyStyleValue('style_a', 'Unavailable_value',
-                ['available_value1', 'available_value2']);
+                array('available_value1', 'available_value2'));
             $this->fail();
         } catch (Exception\UnavailableStyleValue $e) {
             // OK
@@ -103,7 +104,7 @@ class BasicStyleTest extends TestCase
 
         try {
             $this->test_style->verifyStyleValue('style_a', 'available_value1',
-                ['available_value1', 'available_value2']);
+                array('available_value1', 'available_value2'));
         } catch (\Exception $e) {
             $this->fail();
         }

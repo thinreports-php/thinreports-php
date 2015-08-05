@@ -12,9 +12,9 @@ namespace Thinreports\Generator\PDF;
 /**
  * @access private
  */
-trait ColorParser
+class ColorParser
 {
-    static private $color_names = [
+    static private $color_names = array(
         'red'     => 'ff0000',
         'yellow'  => 'fff000',
         'lime'    => '00ff00',
@@ -31,16 +31,16 @@ trait ColorParser
         'gray'    => '808080',
         'silver'  => 'c0c0c0',
         'white'   => 'ffffff'
-    ];
+    );
 
     /**
      * @param string $hex_or_name
      * @return string[]
      */
-    public function parseColor($hex_or_name)
+    static public function parse($hex_or_name)
     {
         if (empty($hex_or_name)) {
-            return [];
+            return array();
         }
 
         if (array_key_exists($hex_or_name, self::$color_names)) {
@@ -48,14 +48,14 @@ trait ColorParser
         } else {
             $hex_color = str_replace('#', '', $hex_or_name);
         }
-        return $this->hexToRgb($hex_color);
+        return self::hexToRgb($hex_color);
     }
 
     /**
      * @param string $hex_color
      * @return string[]
      */
-    private function hexToRgb($hex_color)
+    static private function hexToRgb($hex_color)
     {
         $converter = function ($hex) {
             return hexdec($hex);

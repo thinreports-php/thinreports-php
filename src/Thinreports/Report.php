@@ -16,7 +16,7 @@ class Report
 {
     private $layout;
 
-    private $pages = [];
+    private $pages = array();
     private $page_count = 0;
     private $start_page_number = 1;
 
@@ -29,32 +29,24 @@ class Report
     }
 
     /**
-     * @param $options_or_handler,...
+     * @param array $options {
+     *      @option boolean "count" optional
+     * }
      * @return Page\Page
      *
      * Usage example:
      *
      *  $page->addPage();
-     *  $page->addPage(['count' => true]);
-     *  $page->addPage(function ($new_page) {
-     *      // do something
-     *  });
-     *  $page->addPage(['count' => true], function ($new_page) {
-     *      // do something
-     *  });
+     *  $page->addPage(array('count' => false));
      */
-    public function addPage(...$options_or_handler)
+    public function addPage(array $options = null)
     {
-        list($options, $handler) = $this->parseAddPageArgs($options_or_handler);
-
+        $options     = $this->pageOptionValues($options);
         $page_number = $this->getNextPageNumber($options['count']);
 
         $new_page = new Page\Page($this, $this->layout, $page_number, $options['count']);
         $this->pages[] = $new_page;
 
-        if (is_callable($handler)) {
-            $handler($new_page);
-        }
         return $new_page;
     }
 
@@ -167,35 +159,11 @@ class Report
      */
     private function pageOptionValues(array $options = null)
     {
-        $values = ['count' => true];
+        $values = array('count' => true);
 
         if (is_array($options) && array_key_exists('count', $options)) {
             $values['count'] = $options['count'] === true;
         }
         return $values;
-    }
-
-    /**
-     * @access private
-     *
-     * @param array $args
-     * @return array
-     */
-    private function parseAddPageArgs(array $args)
-    {
-        $options = null;
-        $handler = null;
-
-        if (!empty($args)) {
-            $last_arg = array_pop($args);
-
-            if (is_callable($last_arg)) {
-                $handler = $last_arg;
-                $options = array_pop($args);
-            } else {
-                $options = $last_arg;
-            }
-        }
-        return [$this->pageOptionValues($options), $handler];
     }
 }

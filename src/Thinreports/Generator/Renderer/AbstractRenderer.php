@@ -7,13 +7,28 @@
  * file that was distributed with this source code.
  */
 
-namespace Thinreports\Generator;
+namespace Thinreports\Generator\Renderer;
+
+use Thinreports\Generator\PDF;
 
 /**
  * @access private
  */
-trait StyleBuilder
+abstract class AbstractRenderer
 {
+    /**
+     * @var PDF\Document
+     */
+    protected $doc;
+
+    /**
+     * @param PDF\Document $doc
+     */
+    public function __construct(PDF\Document $doc)
+    {
+        $this->doc = $doc;
+    }
+
     /**
      * @param array $svg_attrs
      * @return array
@@ -27,12 +42,12 @@ trait StyleBuilder
             $stroke_width = $svg_attrs['stroke-width'];
         }
 
-        return [
+        return array(
             'stroke_color' => $svg_attrs['stroke'],
             'stroke_width' => $stroke_width,
             'stroke_dash'  => $svg_attrs['stroke-dasharray'],
             'fill_color'   => $svg_attrs['fill']
-        ];
+        );
     }
 
     /**
@@ -41,14 +56,14 @@ trait StyleBuilder
      */
     public function buildTextStyles(array $svg_attrs)
     {
-        return [
+        return array(
             'font_family'    => $svg_attrs['font-family'],
             'font_size'      => $svg_attrs['font-size'],
             'font_style'     => $this->buildFontStyle($svg_attrs),
             'color'          => $svg_attrs['fill'],
             'align'          => $this->buildTextAlign($svg_attrs['text-anchor']),
             'letter_spacing' => $this->buildLetterSpacing($svg_attrs['letter-spacing'])
-        ];
+        );
     }
 
     /**
@@ -57,7 +72,7 @@ trait StyleBuilder
      */
     public function buildFontStyle(array $svg_attrs)
     {
-        $styles = [];
+        $styles = array();
 
         if ($svg_attrs['font-weight'] === 'bold') {
             $styles[] = 'bold';
@@ -117,7 +132,7 @@ trait StyleBuilder
      */
     public function buildLetterSpacing($letter_spacing)
     {
-        if (in_array($letter_spacing, [null, 'auto', 'normal'])) {
+        if (in_array($letter_spacing, array(null, 'auto', 'normal'))) {
             return null;
         } else {
             return $letter_spacing;

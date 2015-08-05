@@ -11,16 +11,16 @@ namespace Thinreports\Item;
 
 use Thinreports\Page\Page;
 use Thinreports\Item\Style\TextStyle;
+use Thinreports\Item\TextFormatter;
 use Thinreports\Exception;
 
 class TextBlockItem extends AbstractBlockItem
 {
-    use Stylable, Formattable;
-
     const TYPE_NAME = 's-tblock';
 
     private $format_enabled = null;
     private $reference_item = null;
+    private $formatter;
 
     /**
      * {@inheritdoc}
@@ -30,6 +30,8 @@ class TextBlockItem extends AbstractBlockItem
         parent::__construct($parent, $format);
 
         $this->style = new TextStyle($format);
+        $this->formatter = new TextFormatter($format['format']);
+
         $this->format_enabled = $this->hasFormatSettings();
 
         parent::setValue($format['value']);
@@ -102,7 +104,7 @@ class TextBlockItem extends AbstractBlockItem
     public function getRealValue()
     {
         if ($this->isFormatEnabled()) {
-            return $this->getFormattedValue();
+            return $this->formatter->format($this->getValue());
         } else {
             return $this->getValue();
         }

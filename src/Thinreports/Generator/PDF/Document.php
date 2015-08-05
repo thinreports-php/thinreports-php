@@ -13,13 +13,27 @@ use Thinreports\Layout;
 
 class Document
 {
-    use Font, ColorParser, Graphics, Text;
-
     /**
      * @var \TCPDF
      */
     private $pdf;
+
+    /**
+     * @var array
+     */
     private $default_page_format;
+
+    /**
+     * @var Graphics
+     * @access public
+     */
+    public $graphics;
+
+    /**
+     * @var Text
+     * @access public
+     */
+    public $text;
 
     /**
      * @param Layout $default_layout
@@ -37,6 +51,8 @@ class Document
         $this->pdf->SetCellMargins(0, 0, 0, 0);
         $this->pdf->SetPrintHeader(false);
         $this->pdf->SetPrintFooter(false);
+
+        $this->initializeDrawer();
 
         $this->default_layout = $default_layout;
         $this->default_page_format = $this->buildPageFormat($default_layout);
@@ -99,14 +115,20 @@ class Document
             }
         }
 
-        return [
+        return array(
             'orientation' => $orientation,
             'size' => $size
-        ];
+        );
+    }
+
+    private function initializeDrawer()
+    {
+        $this->graphics = new Graphics($this->pdf);
+        $this->text     = new Text($this->pdf);
     }
 
     public function __destruct()
     {
-        $this->clearRegisteredImages();
+        $this->graphics->clearRegisteredImages();
     }
 }
