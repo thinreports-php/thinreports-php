@@ -19,20 +19,15 @@ $page = $report->addPage();
 $page->setItemValue('world', 'World');
 $page->setItemValue('sekai', '世界');
 
-$report->addPage(function ($new_page) {
-    $new_page('world')->setValue('World')->setStyle('color', 'blue');
-    $new_page('sekai')->setValue('世界');
-});
-
 $page = $report->addPage();
-$page->setItemValues([
+$page->setItemValues(array(
     'world' => 'World',
     'sekai' => '世界'
-]);
+));
 
-$report->addPage()->setItemValues([
+$report->addPage()->setItemValues(array(
     'world' => 'World',
     'sekai' => '世界'
-]);
+));
 
 $report->generate(__DIR__ . '/hello_world.pdf');

@@ -49,10 +49,10 @@ class LayoutTest extends TestCase
         $svg = '<!--SHAPE{"type":"rect"}-->' .
                '<!--LAYOUT<rect class="s-rect"/>-->' .
                '<ellipse class="s-ellipse"/>';
-        $format = [
+        $format = array(
             'svg'   => $svg,
-            'state' => []
-        ];
+            'state' => array()
+        );
         Layout::cleanFormat($format);
 
         $this->assertEquals('<ellipse class="s-ellipse"/>', $format['svg']);
@@ -75,9 +75,9 @@ SVG;
         $formats = Layout::extractItemFormats($layout);
 
         $this->assertCount(4, $formats);
-        $this->assertEquals(['type' => 's-tblock', 'id' => 'text_block1'], $formats['text_block1']);
-        $this->assertEquals(['type' => 's-tblock', 'id' => 'text_block2'], $formats['text_block2']);
-        $this->assertEquals(['type' => 's-pageno', 'id' => 'page_no'], $formats['page_no']);
+        $this->assertEquals(array('type' => 's-tblock', 'id' => 'text_block1'), $formats['text_block1']);
+        $this->assertEquals(array('type' => 's-tblock', 'id' => 'text_block2'), $formats['text_block2']);
+        $this->assertEquals(array('type' => 's-pageno', 'id' => 'page_no'), $formats['page_no']);
         $this->assertCount(1, preg_grep('/^__page_no_/', array_keys($formats)));
 
         $this->assertArrayNotHasKey('s-list', $formats);
@@ -85,8 +85,8 @@ SVG;
 
     function test_hasItem()
     {
-        $item_formats = ['foo_id' => []];
-        $layout = new Layout(['svg' => '<svg></svg>'], $item_formats);
+        $item_formats = array('foo_id' => array());
+        $layout = new Layout(array('svg' => '<svg></svg>'), $item_formats);
 
         $this->assertTrue($layout->hasItem('foo_id'));
         $this->assertFalse($layout->hasItem('unknown_id'));
@@ -94,18 +94,18 @@ SVG;
 
     function test_createItem()
     {
-        $item_formats = $this->dataItemFormats([
-            ['text_block', 'default'],
-            ['image_block', 'default'],
-            ['page_number', 'default'],
-            ['rect', 'default'],
-            ['ellipse', 'default'],
-            ['line', 'default'],
-            ['image', 'default'],
-            ['text', 'default']
-        ]);
+        $item_formats = $this->dataItemFormats(array(
+            array('text_block', 'default'),
+            array('image_block', 'default'),
+            array('page_number', 'default'),
+            array('rect', 'default'),
+            array('ellipse', 'default'),
+            array('line', 'default'),
+            array('image', 'default'),
+            array('text', 'default')
+        ));
 
-        $layout = new Layout(['svg' => '<svg></svg>'], $item_formats);
+        $layout = new Layout(array('svg' => '<svg></svg>'), $item_formats);
 
         $dummy_report = new Report($this->dataLayoutFile('empty.tlf'));
         $dummy_page   = $dummy_report->addPage();
@@ -123,13 +123,13 @@ SVG;
             $layout->createItem($dummy_page, '__page_no_1__')
         );
 
-        $graphic_ids = [
+        $graphic_ids = array(
             'rect_default',
             'ellipse_default',
             'line_default',
             'image_default',
             'text_default'
-        ];
+        );
         foreach ($graphic_ids as $id) {
             $this->assertInstanceOf(
                 'Thinreports\Item\BasicItem',
@@ -157,19 +157,19 @@ SVG;
      */
     function test_getters_for_Layout_configuration()
     {
-        $regular_paper_type_format = [
+        $regular_paper_type_format = array(
             'version' => '0.8.2',
-            'config' => [
+            'config' => array(
                 'title' => 'Report Title',
-                'page'  => [
+                'page'  => array(
                     'paper-type'  => 'A4',
                     'orientation' => 'landscape',
-                ]
-            ],
+                )
+            ),
             'svg' => '<svg></svg>'
-        ];
+        );
 
-        $layout = new Layout($regular_paper_type_format, []);
+        $layout = new Layout($regular_paper_type_format, array());
 
         $this->assertEquals('0.8.2', $layout->getLastVersion());
         $this->assertEquals('Report Title', $layout->getReportTitle());
@@ -179,55 +179,55 @@ SVG;
         $this->assertNull($layout->getPageSize());
         $this->assertEquals('<svg></svg>', $layout->getSVG());
 
-        $user_paper_type_format = [
+        $user_paper_type_format = array(
             'version' => '0.8.2',
-            'config' => [
+            'config' => array(
                 'title' => 'Report Title',
-                'page'  => [
+                'page'  => array(
                     'paper-type'  => 'user',
                     'orientation' => 'landscape',
                     'width'       => 100.9,
                     'height'      => 999.9
-                ]
-            ],
+                )
+            ),
             'svg' => '<svg></svg>'
-        ];
+        );
 
-        $layout = new Layout($user_paper_type_format, []);
+        $layout = new Layout($user_paper_type_format, array());
 
         $this->assertEquals('user', $layout->getPagePaperType());
         $this->assertTrue($layout->isUserPaperType());
-        $this->assertEquals([100.9, 999.9], $layout->getPageSize());
+        $this->assertEquals(array(100.9, 999.9), $layout->getPageSize());
     }
 
     function test_getIdentifier()
     {
-        $format = [
+        $format = array(
             'svg' => '<svg></svg>'
-        ];
+        );
 
-        $layout = new Layout($format, []);
+        $layout = new Layout($format, array());
         $this->assertEquals(md5('<svg></svg>'), $layout->getIdentifier());
     }
 
     function test_getFormat()
     {
-        $format = [
+        $format = array(
             'version' => '0.8.2',
             'svg'     => '<svg></svg>'
-        ];
+        );
 
-        $layout = new Layout($format, []);
+        $layout = new Layout($format, array());
         $this->assertSame($format, $layout->getFormat());
     }
 
     function test_getItemFormats()
     {
-        $item_formats = [
-            'rect_id' => ['type' => 's-rect']
-        ];
+        $item_formats = array(
+            'rect_id' => array('type' => 's-rect')
+        );
 
-        $layout = new Layout(['svg' => '<svg></svg>'], $item_formats);
+        $layout = new Layout(array('svg' => '<svg></svg>'), $item_formats);
         $this->assertSame($item_formats, $layout->getItemFormats());
     }
 }

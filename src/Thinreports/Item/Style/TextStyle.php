@@ -16,20 +16,20 @@ use Thinreports\Exception;
  */
 class TextStyle extends BasicStyle
 {
-    static protected $available_style_names = [
+    static protected $available_style_names = array(
         'bold', 'italic', 'underline', 'linethrough',
         'align', 'valign', 'color', 'font_size'
-    ];
+    );
 
-    static private $text_alignments = [
+    static private $text_alignments = array(
         'left'   => 'start',
         'center' => 'middle',
         'right'  => 'end'
-    ];
+    );
 
-    static private $vertical_alignments = [
+    static private $vertical_alignments = array(
         'top', 'center', 'bottom'
-    ];
+    ) ;
 
     private $vertical_align = 'top';
 
@@ -156,11 +156,12 @@ class TextStyle extends BasicStyle
      */
     public function get_align()
     {
-        if (empty($this->readStyle('text-anchor'))) {
+        $alignment_value = $this->readStyle('text-anchor');
+
+        if (empty($alignment_value)) {
             return 'left';
         }
 
-        $alignment_value = $this->readStyle('text-anchor');
         $alignment_key = array_search($alignment_value, self::$text_alignments);
 
         if (!$alignment_key) {
@@ -193,7 +194,7 @@ class TextStyle extends BasicStyle
      */
     private function setTextDecoration($underline = null, $linethrough = null)
     {
-        $decorations = [];
+        $decorations = array();
 
         if (is_null($underline)) {
             $underline = $this->get_underline();

@@ -16,7 +16,7 @@ class TextBlockItemTest extends TestCase
         $text_block_formats = $this->dataItemFormatsFor('text_block');
 
         $report = new Report($this->dataLayoutFile('empty.tlf'));
-        $layout = new Layout(['svg' => '<svg></svg>'], $text_block_formats);
+        $layout = new Layout(array('svg' => '<svg></svg>'), $text_block_formats);
 
         $this->page= new Page($report, $layout, 1);
     }
@@ -31,8 +31,8 @@ class TextBlockItemTest extends TestCase
     {
         $text_block = $this->newTextBlock('default');
 
-        $this->assertAttributeInstanceOf('Thinreports\Item\Style\TextStyle',
-            'style', $text_block);
+        $this->assertAttributeInstanceOf('Thinreports\Item\Style\TextStyle', 'style', $text_block);
+        $this->assertAttributeInstanceOf('Thinreports\Item\TextFormatter', 'formatter', $text_block);
         $this->assertAttributeSame('', 'value', $text_block);
         $this->assertAttributeSame(false, 'format_enabled', $text_block);
         $this->assertAttributeSame(null, 'reference_item', $text_block);

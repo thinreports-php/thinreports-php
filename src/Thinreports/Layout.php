@@ -15,8 +15,9 @@ use Thinreports\Page\Page;
 
 class Layout
 {
-    const FILE_EXT_NAME  = 'tlf';
-    const REQUIRED_RULES = [ ['>=', '0.8.2'], ['<', '1.0.0'] ];
+    const FILE_EXT_NAME = 'tlf';
+    const COMPATIBLE_VERSION_RANGE_START = '>= 0.8.2';
+    const COMPATIBLE_VERSION_RANGE_END   = '< 1.0.0';
 
     /**
      * @param string $filename
@@ -48,7 +49,11 @@ class Layout
         $format = json_decode($file_content, true);
 
         if (!self::isCompatible($format['version'])) {
-            throw new Exception\IncompatibleLayout($format['version'], self::REQUIRED_RULES);
+            $rules = array(
+                self::COMPATIBLE_VERSION_RANGE_START,
+                self::COMPATIBLE_VERSION_RANGE_END
+            );
+            throw new Exception\IncompatibleLayout($format['version'], $rules);
         }
 
         $item_formats = self::extractItemFormats($format['svg']);
@@ -68,7 +73,7 @@ class Layout
         preg_match_all('/<!--SHAPE(.*?)SHAPE-->/',
             $layout_format, $matched_items, PREG_SET_ORDER);
 
-        $item_formats = [];
+        $item_formats = array();
 
         foreach ($matched_items as $matched_item) {
             $item_format_json = $matched_item[1];
@@ -106,8 +111,13 @@ class Layout
      */
     static public function isCompatible($layout_version)
     {
-        foreach (self::REQUIRED_RULES as $rule) {
-            list($operator, $version) = $rule;
+        $rules = array(
+            self::COMPATIBLE_VERSION_RANGE_START,
+            self::COMPATIBLE_VERSION_RANGE_END
+        );
+
+        foreach ($rules as $rule) {
+            list($operator, $version) = explode(' ', $rule);
 
             if (!version_compare($layout_version, $version, $operator)) {
                 return false;
@@ -129,7 +139,7 @@ class Layout
     }
 
     private $format;
-    private $item_foramts = [];
+    private $item_foramts = array();
     private $identifier;
 
     /**
@@ -182,7 +192,7 @@ class Layout
     {
         if ($this->isUserPaperType()) {
             $page = $this->format['config']['page'];
-            return [ $page['width'], $page['height'] ];
+            return array($page['width'], $page['height']);
         } else {
             return null;
         }

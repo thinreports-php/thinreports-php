@@ -105,7 +105,7 @@ class PageNumberItemTest extends TestCase
         $test_item = $this->newPageNumber('default');
 
         $this->assertEquals(
-            ['x' => 100, 'y' => 100, 'width' => 100, 'height' => 100],
+            array('x' => 100, 'y' => 100, 'width' => 100, 'height' => 100),
             $test_item->getBounds()
         );
     }

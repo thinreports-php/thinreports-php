@@ -6,19 +6,21 @@ use Thinreports\Exception;
 
 class TextStyleTest extends TestCase
 {
-    private function newTextStyle($valign = null, array $svg_attrs = [])
+    private function newTextStyle($valign = null, array $svg_attrs = array())
     {
-        return new TextStyle([
+        return new TextStyle(array(
             'valign' => $valign,
-            'svg'    => ['attrs' => $svg_attrs]
-        ]);
+            'svg'    => array('attrs' => $svg_attrs)
+        ));
     }
 
     function test_available_style_names()
     {
         $this->assertAttributeEquals(
-            ['bold', 'italic', 'underline', 'linethrough',
-             'align', 'valign', 'color', 'font_size'],
+            array(
+                'bold', 'italic', 'underline', 'linethrough',
+                'align', 'valign', 'color', 'font_size'
+            ),
             'available_style_names', 'Thinreports\Item\Style\TextStyle'
         );
     }
@@ -34,29 +36,31 @@ class TextStyleTest extends TestCase
 
     function test_set_color()
     {
-        $test_style = $this->newTextStyle(null, ['fill' => 'red']);
-
+        $test_style = $this->newTextStyle(null, array('fill' => 'red'));
         $test_style->set_color('#ff0000');
-        $this->assertEquals('#ff0000', $test_style->export()['fill']);
+
+        $styles = $test_style->export();
+        $this->assertEquals('#ff0000', $styles['fill']);
     }
 
     function test_get_color()
     {
-        $test_style = $this->newTextStyle(null, ['fill' => 'blue']);
+        $test_style = $this->newTextStyle(null, array('fill' => 'blue'));
         $this->assertEquals('blue', $test_style->get_color());
     }
 
     function test_set_font_size()
     {
-        $test_style = $this->newTextStyle(null, ['font-size' => '18']);
-
+        $test_style = $this->newTextStyle(null, array('font-size' => '18'));
         $test_style->set_font_size(20);
-        $this->assertEquals(20, $test_style->export()['font-size']);
+
+        $styles = $test_style->export();
+        $this->assertEquals(20, $styles['font-size']);
     }
 
     function test_get_font_size()
     {
-        $test_style = $this->newTextStyle(null, ['font-size' => '12']);
+        $test_style = $this->newTextStyle(null, array('font-size' => '12'));
         $this->assertEquals('12', $test_style->get_font_size());
     }
 
@@ -67,85 +71,99 @@ class TextStyleTest extends TestCase
      */
     function test_bold()
     {
-        $test_style = $this->newTextStyle(null, ['font-weight' => 'normal']);
+        $test_style = $this->newTextStyle(null, array('font-weight' => 'normal'));
         $this->assertFalse($test_style->get_bold());
 
         $test_style->set_bold(true);
 
-        $this->assertEquals('bold', $test_style->export()['font-weight']);
+        $styles = $test_style->export();
+        $this->assertEquals('bold', $styles['font-weight']);
         $this->assertTrue($test_style->get_bold());
 
         $test_style->set_bold(false);
 
-        $this->assertEquals('normal', $test_style->export()['font-weight']);
+        $styles = $test_style->export();
+        $this->assertEquals('normal', $styles['font-weight']);
         $this->assertFalse($test_style->get_bold());
     }
 
     function test_italic()
     {
-        $test_style =$this->newTextStyle(null, ['font-style' => 'normal']);
+        $test_style =$this->newTextStyle(null, array('font-style' => 'normal'));
         $this->assertFalse($test_style->get_italic());
 
         $test_style->set_italic(true);
 
-        $this->assertEquals('italic', $test_style->export()['font-style']);
+        $styles = $test_style->export();
+        $this->assertEquals('italic', $styles['font-style']);
         $this->assertTrue($test_style->get_italic());
 
         $test_style->set_italic(false);
 
-        $this->assertEquals('normal', $test_style->export()['font-style']);
+        $styles = $test_style->export();
+        $this->assertEquals('normal', $styles['font-style']);
         $this->assertFalse($test_style->get_italic());
     }
 
     function test_underline()
     {
         $test_style = $this->newTextStyle(null,
-                        ['text-decoration' => 'underline']);
+                        array('text-decoration' => 'underline'));
         $this->assertTrue($test_style->get_underline());
 
         $test_style->set_underline(false);
-        $this->assertEquals('none', $test_style->export()['text-decoration']);
+
+        $styles = $test_style->export();
+        $this->assertEquals('none', $styles['text-decoration']);
         $this->assertFalse($test_style->get_underline());
 
         $test_style = $this->newTextStyle(null,
-                        ['text-decoration' => 'line-through underline']);
+                        array('text-decoration' => 'line-through underline'));
         $this->assertTrue($test_style->get_underline());
 
         $test_style->set_underline(false);
-        $this->assertEquals('line-through', $test_style->export()['text-decoration']);
+
+        $styles = $test_style->export();
+        $this->assertEquals('line-through', $styles['text-decoration']);
         $this->assertFalse($test_style->get_underline());
 
         $test_style = $this->newTextStyle(null,
-                        ['text-decoration' => 'line-through']);
+                        array('text-decoration' => 'line-through'));
         $this->assertFalse($test_style->get_underline());
 
         $test_style->set_underline(true);
-        $this->assertEquals('underline line-through', $test_style->export()['text-decoration']);
+
+        $styles = $test_style->export();
+        $this->assertEquals('underline line-through', $styles['text-decoration']);
         $this->assertTrue($test_style->get_underline());
 
         $test_style = $this->newTextStyle(null,
-                        ['text-decoration' => 'none']);
+                        array('text-decoration' => 'none'));
         $this->assertFalse($test_style->get_underline());
 
         $test_style->set_underline(true);
-        $this->assertEquals('underline', $test_style->export()['text-decoration']);
+
+        $styles = $test_style->export();
+        $this->assertEquals('underline', $styles['text-decoration']);
         $this->assertTrue($test_style->get_underline());
     }
 
     function test_linethrough()
     {
         $test_style = $this->newTextStyle(null,
-                        ['text-decoration' => 'line-through']);
+                        array('text-decoration' => 'line-through'));
         $this->assertTrue($test_style->get_linethrough());
 
         $test_style->set_linethrough(false);
+
+        $styles = $test_style->export();
         $this->assertFalse($test_style->get_linethrough());
-        $this->assertEquals('none', $test_style->export()['text-decoration']);
+        $this->assertEquals('none', $styles['text-decoration']);
     }
 
     function test_set_align()
     {
-        $test_style = $this->newTextStyle(null, ['text-anchor' => 'start']);
+        $test_style = $this->newTextStyle(null, array('text-anchor' => 'start'));
 
         try {
             $test_style->set_align('unavailable_value');
@@ -155,27 +173,33 @@ class TextStyleTest extends TestCase
         }
 
         $test_style->set_align('left');
-        $this->assertEquals('start', $test_style->export()['text-anchor']);
+
+        $styles = $test_style->export();
+        $this->assertEquals('start', $styles['text-anchor']);
 
         $test_style->set_align('center');
-        $this->assertEquals('middle', $test_style->export()['text-anchor']);
+
+        $styles = $test_style->export();
+        $this->assertEquals('middle', $styles['text-anchor']);
 
         $test_style->set_align('right');
-        $this->assertEquals('end', $test_style->export()['text-anchor']);
+
+        $styles = $test_style->export();
+        $this->assertEquals('end', $styles['text-anchor']);
     }
 
     function test_get_align()
     {
-        $test_style = $this->newTextStyle(null, ['text-anchor' => '']);
+        $test_style = $this->newTextStyle(null, array('text-anchor' => ''));
         $this->assertEquals('left', $test_style->get_align());
 
-        $test_style = $this->newTextStyle(null, ['text-anchor' => 'start']);
+        $test_style = $this->newTextStyle(null, array('text-anchor' => 'start'));
         $this->assertEquals('left', $test_style->get_align());
 
-        $test_style = $this->newTextStyle(null, ['text-anchor' => 'middle']);
+        $test_style = $this->newTextStyle(null, array('text-anchor' => 'middle'));
         $this->assertEquals('center', $test_style->get_align());
 
-        $test_style = $this->newTextStyle(null, ['text-anchor' => 'end']);
+        $test_style = $this->newTextStyle(null, array('text-anchor' => 'end'));
         $this->assertEquals('right', $test_style->get_align());
     }
 

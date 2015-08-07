@@ -4,23 +4,25 @@ namespace Thinreports\Page;
 use Thinreports\TestCase;
 use Thinreports\Report;
 use Thinreports\Layout;
+use Thinreports\Item;
 use Thinreports\Exception;
 
 class PageTest extends TestCase
 {
     private $report;
     private $layout;
+    private $item_formats;
 
     function setup()
     {
-        $item_formats = $this->dataItemFormats([
-            ['text_block', 'default'],
-            ['image_block', 'default'],
-            ['text', 'default']
-        ]);
+        $this->item_formats = $this->dataItemFormats(array(
+            array('text_block', 'default'),
+            array('image_block', 'default'),
+            array('text', 'default')
+        ));
 
         $this->report = new Report($this->dataLayoutFile('empty.tlf'));
-        $this->layout = new Layout(['svg' => '<svg></svg>'], $item_formats);
+        $this->layout = new Layout(array('svg' => '<svg></svg>'), $this->item_formats);
     }
 
     private function newPage($is_countable = true)
@@ -107,16 +109,16 @@ class PageTest extends TestCase
         $page = $this->newPage();
 
         try {
-            $page->setItemValues(['text_default' => 'value']);
+            $page->setItemValues(array('text_default' => 'value'));
             $this->fail();
         } catch (Exception\StandardException $e) {
             $this->assertEquals('Unedtiable Item', $e->getSubject());
         }
 
-        $page->setItemValues([
+        $page->setItemValues(array(
             'text_block_default'  => 'value',
             'image_block_default' => 'value'
-        ]);
+        ));
 
         $this->assertEquals('value', $page('text_block_default')->getValue());
         $this->assertEquals('value', $page('image_block_default')->getValue());
@@ -145,5 +147,17 @@ class PageTest extends TestCase
         $page = $this->newPage();
 
         $this->assertSame($this->layout, $page->getLayout());
+    }
+
+    function test_getFinalizedItems()
+    {
+        $page = $this->newPage();
+
+        $expects = array(
+            new Item\TextBlockItem($page, $this->item_formats['text_block_default']),
+            new Item\ImageBlockItem($page, $this->item_formats['image_block_default']),
+            new Item\BasicItem($page, $this->item_formats['text_default'])
+        );
+        $this->assertEquals($expects, $page->getFinalizedItems());
     }
 }

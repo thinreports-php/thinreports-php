@@ -14,8 +14,6 @@ use Thinreports\Item\Style;
 
 class BasicItem extends AbstractItem
 {
-    use Stylable;
-
     const TYPE_NAME = 'basic';
 
     /**
@@ -105,31 +103,31 @@ class BasicItem extends AbstractItem
 
         switch (true) {
             case $this->isImage() || $this->isRect():
-                return [
+                return array(
                     'x'      => $svg_attrs['x'],
                     'y'      => $svg_attrs['y'],
                     'width'  => $svg_attrs['width'],
                     'height' => $svg_attrs['height']
-                ];
+                );
                 break;
             case $this->isText():
                 return $this->format['box'];
                 break;
             case $this->isEllipse():
-                return [
+                return array(
                     'cx' => $svg_attrs['cx'],
                     'cy' => $svg_attrs['cy'],
                     'rx' => $svg_attrs['rx'],
                     'ry' => $svg_attrs['ry']
-                ];
+                );
                 break;
             case $this->isLine():
-                return [
+                return array(
                     'x1' => $svg_attrs['x1'],
                     'y1' => $svg_attrs['y1'],
                     'x2' => $svg_attrs['x2'],
                     'y2' => $svg_attrs['y2']
-                ];
+                );
                 break;
         }
     }

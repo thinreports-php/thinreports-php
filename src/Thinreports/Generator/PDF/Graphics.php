@@ -12,24 +12,37 @@ namespace Thinreports\Generator\PDF;
 /**
  * @access private
  */
-trait Graphics
+class Graphics
 {
-    static private $pdf_image_align = [
+    static private $pdf_image_align = array(
         'left'   => 'L',
         'center' => 'C',
         'right'  => 'R'
-    ];
+    );
 
-    static private $pdf_image_valign = [
+    static private $pdf_image_valign = array(
         'top'    => 'T',
         'middle' => 'M',
         'bottom' => 'B'
-    ];
+    );
+
+    /**
+     * @var \TCPDF
+     */
+    private $pdf;
 
     /**
      * @var string[]
      */
-    private $image_registry = [];
+    private $image_registry = array();
+
+    /**
+     * @param \TCPDF $pdf
+     */
+    public function __construct(\TCPDF $pdf)
+    {
+        $this->pdf = $pdf;
+    }
 
     /**
      * @param float|string $x1
@@ -43,7 +56,7 @@ trait Graphics
      * }
      * @see http://www.tcpdf.org/doc/code/classTCPDF.html
      */
-    public function drawLine($x1, $y1, $x2, $y2, array $attrs = [])
+    public function drawLine($x1, $y1, $x2, $y2, array $attrs = array())
     {
         $style = $this->buildGraphicStyles($attrs);
 
@@ -64,13 +77,13 @@ trait Graphics
      * }
      * @see http://www.tcpdf.org/doc/code/classTCPDF.html
      */
-    public function drawRect($x, $y, $width, $height, array $attrs = [])
+    public function drawRect($x, $y, $width, $height, array $attrs = array())
     {
         $style = $this->buildGraphicStyles($attrs);
 
         if (empty($attrs['radius'])) {
             $this->pdf->Rect($x, $y, $width, $height,
-                null, ['all' => $style['stroke']], $style['fill']);
+                null, array('all' => $style['stroke']), $style['fill']);
         } else {
             $this->pdf->RoundedRect($x, $y, $width, $height,
                 $attrs['radius'], '1111', null, $style['stroke'], $style['fill']);
@@ -90,7 +103,7 @@ trait Graphics
      * }
      * @see http://www.tcpdf.org/doc/code/classTCPDF.html
      */
-    public function drawEllipse($cx, $cy, $rx, $ry, array $attrs = [])
+    public function drawEllipse($cx, $cy, $rx, $ry, array $attrs = array())
     {
         $style = $this->buildGraphicStyles($attrs);
 
@@ -110,7 +123,7 @@ trait Graphics
      * }
      * @see http://www.tcpdf.org/doc/code/classTCPDF.html
      */
-    public function drawImage($filename, $x, $y, $width, $height, array $attrs = [])
+    public function drawImage($filename, $x, $y, $width, $height, array $attrs = array())
     {
         $position = $this->buildImagePosition($attrs);
 
@@ -141,16 +154,14 @@ trait Graphics
      * @param float|string $height
      * @param array $attrs {@see self::drawImage()}
      */
-    public function drawBase64Image($base64_string, $x, $y, $width, $height, array $attrs = [])
+    public function drawBase64Image($base64_string, $x, $y, $width, $height, array $attrs = array())
     {
         $registry_key = md5($base64_string);
+        $image_path = $this->getRegisteredImagePath($registry_key);
 
-        if (array_key_exists($registry_key, $this->image_registry)) {
-            $image_path = $this->image_registry[$registry_key];
-        } else {
+        if (is_null($image_path)) {
             $image_path = tempnam(sys_get_temp_dir(), 'thinreports');
             $this->image_registry[$registry_key] = $image_path;
-
             file_put_contents($image_path, base64_decode($base64_string));
         }
 
@@ -166,14 +177,14 @@ trait Graphics
 
     /**
      * @param array $attrs
-     * @return array {@example ["stroke" => ["attr" => "value"], "fill" => "fill_color"]}
+     * @return array {@example array("stroke" => array("attr" => "value"), "fill" => "fill_color"))
      */
     public function buildGraphicStyles(array $attrs)
     {
         if (empty($attrs['stroke_width'])) {
             $stroke_style = null;
         } else {
-            $stroke_color = $this->parseColor($attrs['stroke_color']);
+            $stroke_color = ColorParser::parse($attrs['stroke_color']);
 
             if ($attrs['stroke_dash'] === 'none') {
                 $stroke_dash = null;
@@ -181,22 +192,39 @@ trait Graphics
                 $stroke_dash = $attrs['stroke_dash'];
             }
 
-            $stroke_style = [
+            $stroke_style = array(
                 'width' => $attrs['stroke_width'],
                 'color' => $stroke_color,
                 'dash'  => $stroke_dash
-            ];
+            );
         }
 
         if (array_key_exists('fill_color', $attrs) && $attrs['fill_color'] !== 'none') {
-            $fill_color = $this->parseColor($attrs['fill_color']);
+            $fill_color = ColorParser::parse($attrs['fill_color']);
         } else {
-            $fill_color = [];
+            $fill_color = array();
         }
 
-        return ['stroke' => $stroke_style, 'fill' => $fill_color];
+        return array('stroke' => $stroke_style, 'fill' => $fill_color);
     }
 
+    /**
+     * @param string $registry_key
+     * @return string|null
+     */
+    public function getRegisteredImagePath($registry_key)
+    {
+        if (array_key_exists($registry_key, $this->image_registry)) {
+            return $this->image_registry[$registry_key];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param array $attrs
+     * @return string
+     */
     public function buildImagePosition(array $attrs)
     {
         $align  = array_key_exists('align', $attrs)  ? $attrs['align']  : 'left';

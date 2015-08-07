@@ -3,31 +3,14 @@ namespace Thinreports\Generator\PDF;
 
 use Thinreports\TestCase;
 
-class TestGraphics
-{
-    use Graphics, ColorParser;
-
-    public $pdf;
-
-    public function __construct($tcpdf = null)
-    {
-        $this->pdf = $tcpdf;
-    }
-
-    public function _getImageRegistry()
-    {
-        return $this->image_registry;
-    }
-}
-
 class GraphicsTest extends TestCase
 {
     private $tcpdf;
 
     function setup()
     {
-        $this->tcpdf = $this->getMockBuilder('MockTCPDF')
-                            ->setMethods(['Line', 'Rect', 'RoundedRect', 'Image', 'Ellipse'])
+        $this->tcpdf = $this->getMockBuilder('TCPDF')
+                            ->setMethods(array('Line', 'Rect', 'RoundedRect', 'Image', 'Ellipse'))
                             ->getMock();
     }
 
@@ -40,24 +23,24 @@ class GraphicsTest extends TestCase
                         200.0,
                         300.0,
                         400.0,
-                        [
+                        array(
                             'width' => '1',
-                            'color' => [0, 0, 0],
+                            'color' => array(0, 0, 0),
                             'dash' => null
-                        ]
+                        )
                     );
 
-        $test_graphics = new TestGraphics($this->tcpdf);
+        $test_graphics = new Graphics($this->tcpdf);
         $test_graphics->drawLine(
             100.0,
             200.0,
             300.0,
             400.0,
-            [
+            array(
                 'stroke_width' => '1',
                 'stroke_color' => '#000000',
                 'stroke_dash' => 'none'
-            ]
+            )
         );
     }
 
@@ -71,26 +54,28 @@ class GraphicsTest extends TestCase
                         300.0,
                         400.0,
                         null,
-                        ['all' => [
-                            'width' => '2',
-                            'color' => [255, 255, 255],
-                            'dash' => '1,2'
-                        ]],
-                        [255, 0, 0]
+                        array(
+                            'all' => array(
+                                'width' => '2',
+                                'color' => array(255, 255, 255),
+                                'dash' => '1,2'
+                            )
+                        ),
+                        array(255, 0, 0)
                     );
 
-        $test_graphics = new TestGraphics($this->tcpdf);
+        $test_graphics = new Graphics($this->tcpdf);
         $test_graphics->drawRect(
             100.0,
             200.0,
             300.0,
             400.0,
-            [
+            array(
                 'stroke_width' => '2',
                 'stroke_color' => 'ffffff',
                 'stroke_dash' => '1,2',
                 'fill_color' => 'red'
-            ]
+            )
         );
 
         $this->tcpdf->expects($this->once())
@@ -103,12 +88,12 @@ class GraphicsTest extends TestCase
                         1,
                         '1111',
                         null,
-                        [
+                        array(
                             'width' => '2',
-                            'color' => [255, 255, 255],
+                            'color' => array(255, 255, 255),
                             'dash' => '1,2'
-                        ],
-                        [255, 0, 0]
+                        ),
+                        array(255, 0, 0)
                     );
 
         $test_graphics->drawRect(
@@ -116,13 +101,13 @@ class GraphicsTest extends TestCase
             200.0,
             300.0,
             400.0,
-            [
+            array(
                 'stroke_width' => '2',
                 'stroke_color' => 'ffffff',
                 'stroke_dash' => '1,2',
                 'fill_color' => 'red',
                 'radius' => 1
-            ]
+            )
         );
     }
 
@@ -139,25 +124,25 @@ class GraphicsTest extends TestCase
                         0,
                         360,
                         null,
-                        [
+                        array(
                             'width' => '3',
-                            'color' => [0, 0, 255],
+                            'color' => array(0, 0, 255),
                             'dash' => null
-                        ]
+                        )
                     );
 
-        $test_graphics = new TestGraphics($this->tcpdf);
+        $test_graphics = new Graphics($this->tcpdf);
         $test_graphics->drawEllipse(
             100.0,
             200.0,
             300.0,
             400.0,
-            [
+            array(
                 'stroke_width' => '3',
                 'stroke_color' => 'blue',
                 'stroke_dash' => 'none',
                 'fill_color' => '0000ff'
-            ]
+            )
         );
     }
 
@@ -183,17 +168,17 @@ class GraphicsTest extends TestCase
                         'CM'
                     );
 
-        $test_graphics = new TestGraphics($this->tcpdf);
+        $test_graphics = new Graphics($this->tcpdf);
         $test_graphics->drawImage(
             '/path/to/image.png',
             100.0,
             200.0,
             300.0,
             400.0,
-            [
+            array(
                 'align' => 'center',
                 'valign' => 'middle'
-            ]
+            )
         );
     }
 
@@ -202,12 +187,12 @@ class GraphicsTest extends TestCase
         $base64_image = file_get_contents($this->dataDir() . '/image.png.base64');
         $base64_image_key = md5($base64_image);
 
-        $test_graphics = new TestGraphics($this->tcpdf);
+        $test_graphics = new Graphics($this->tcpdf);
 
         $filename_expectation = function ($actual_filename)
             use (&$base64_image_key, &$test_graphics) {
 
-            $expected_filename = $test_graphics->_getImageRegistry()[$base64_image_key];
+            $expected_filename = $test_graphics->getRegisteredImagePath($base64_image_key);
             return $expected_filename === $actual_filename;
         };
 
@@ -226,7 +211,7 @@ class GraphicsTest extends TestCase
             $base64_image, 100.0, 200.0, 300.0, 400.0
         );
 
-        $image_path = $test_graphics->_getImageRegistry()[$base64_image_key];
+        $image_path = $test_graphics->getRegisteredImagePath($base64_image_key);
 
         $this->assertFileExists($image_path);
         $this->assertEquals(
@@ -243,7 +228,7 @@ class GraphicsTest extends TestCase
      */
     function test_buildGraphicStyles($expected_result, $attrs)
     {
-        $test_graphics = new TestGraphics();
+        $test_graphics = new Graphics($this->tcpdf);
 
         $this->assertEquals(
             $expected_result,
@@ -252,50 +237,64 @@ class GraphicsTest extends TestCase
     }
     function graphicStyleProvider()
     {
-        return [
-            [['stroke' => null, 'fill' => []], []],
-            [['stroke' => null, 'fill' => []], ['fill_color' => 'none']],
-            [
-                [
-                    'stroke' => [
+        return array(
+            array(
+                array(
+                    'stroke' => null,
+                    'fill' => array()
+                ),
+                array()
+            ),
+            array(
+                array(
+                    'stroke' => null,
+                    'fill' => array()
+                ),
+                array(
+                    'fill_color' => 'none'
+                )
+            ),
+            array(
+                array(
+                    'stroke' => array(
                         'width' => '1',
-                        'color' => [],
+                        'color' => array(),
                         'dash' => null
-                    ],
-                    'fill' => [0, 0, 0]
-                ],
-                [
+                    ),
+                    'fill' => array(0, 0, 0)
+                ),
+                array(
                     'stroke_width' => '1',
                     'stroke_color' => '',
                     'stroke_dash' => 'none',
                     'fill_color' => '#000000'
-                ]
-            ],
-            [
-                [
-                    'stroke' => [
+                )
+            ),
+            array(
+                array(
+                    'stroke' => array(
                         'width' => 1.5,
-                        'color' => [0, 0, 0],
+                        'color' => array(0, 0, 0),
                         'dash' => '1,2'
-                    ],
-                    'fill' => []
-                ],
-                [
+                    ),
+                    'fill' => array()
+                ),
+                array(
                     'stroke_width' => 1.5,
                     'stroke_color' => 'black',
                     'stroke_dash' => '1,2'
-                ]
-            ]
-        ];
+                )
+            )
+        );
     }
 
     function test_buildImagePosition()
     {
-        $test_graphics = new TestGraphics();
+        $test_graphics = new Graphics($this->tcpdf);
 
-        $this->assertEquals('LT', $test_graphics->buildImagePosition([]));
-        $this->assertEquals('CM', $test_graphics->buildImagePosition([
+        $this->assertEquals('LT', $test_graphics->buildImagePosition(array()));
+        $this->assertEquals('CM', $test_graphics->buildImagePosition(array(
             'align' => 'center', 'valign' => 'middle'
-        ]));
+        )));
     }
 }

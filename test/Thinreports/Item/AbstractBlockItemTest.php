@@ -14,16 +14,16 @@ class AbstractBlockItemTest extends TestCase
     {
         $report = new Report($this->dataLayoutFile('empty.tlf'));
         $parent = $report->addPage();
-        $format = [
+        $format = array(
             'type' => 'test-block',
             'display' => 'true',
-            'box' => [
+            'box' => array(
                 'x' => 100,
                 'y' => 100,
                 'width' => 100,
                 'height' => 100
-            ]
-        ];
+            )
+        );
         $this->test_item = new TestBlockItem($parent, $format);
     }
 
@@ -78,7 +78,7 @@ class AbstractBlockItemTest extends TestCase
     function test_getBounds()
     {
         $this->assertSame(
-            ['x' => 100, 'y' => 100, 'width' => 100, 'height' => 100],
+            array('x' => 100, 'y' => 100, 'width' => 100, 'height' => 100),
             $this->test_item->getBounds()
         );
     }

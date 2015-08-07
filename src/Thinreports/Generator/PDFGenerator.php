@@ -12,6 +12,7 @@ namespace Thinreports\Generator;
 use Thinreports\Report;
 use Thinreports\Layout;
 use Thinreports\Page\Page;
+use Thinreports\Generator\Renderer;
 use Thinreports\Generator\PDF;
 
 /**
@@ -19,10 +20,20 @@ use Thinreports\Generator\PDF;
  */
 class PDFGenerator
 {
-    use ItemRenderers;
-
+    /**
+     * @var Report
+     */
     private $report;
-    private $layout_renderers = [];
+
+    /**
+     * @var Renderer\LayoutRenderer[]
+     */
+    private $layout_renderers = array();
+
+    /**
+     * @var Renderer\ItemRenderer
+     */
+    private $item_renderer;
 
     /**
      * @param Report $report
@@ -40,7 +51,8 @@ class PDFGenerator
     public function __construct(Report $report)
     {
         $this->report = $report;
-        $this->pdf = new PDF\Document($report->getDefaultLayout());
+        $this->doc = new PDF\Document($report->getDefaultLayout());
+        $this->item_renderer = new Renderer\ItemRenderer($this->doc);
     }
 
     /**
@@ -50,12 +62,12 @@ class PDFGenerator
     {
         foreach ($this->report->getPages() as $page) {
             if ($page->isBlank()) {
-                $this->pdf->addBlankPage();
+                $this->doc->addBlankPage();
             } else {
                 $this->renderPage($page);
             }
         }
-        return $this->pdf->render();
+        return $this->doc->render();
     }
 
     /**
@@ -65,10 +77,10 @@ class PDFGenerator
     {
         $layout = $page->getLayout();
 
-        $this->pdf->addPage($layout);
+        $this->doc->addPage($layout);
 
         $this->renderLayout($layout);
-        $this->renderItems($page);
+        $this->renderItems($page->getFinalizedItems());
     }
 
     /**
@@ -81,58 +93,19 @@ class PDFGenerator
         if (array_key_exists($layout_identifier, $this->layout_renderers)) {
             $renderer = $this->layout_renderers[$layout_identifier];
         } else {
-            $renderer = LayoutRenderer::parse($layout);
+            $renderer = new Renderer\LayoutRenderer($this->doc, $layout);
             $this->layout_renderers[$layout_identifier] = $renderer;
         }
-        $renderer->renderTo($this->pdf);
+        $renderer->render();
     }
 
     /**
-     * @param Page $page
+     * @param Thinreports\Item\AbstractItem[] $items
      */
-    public function renderItems(Page $page)
+    public function renderItems(array $items)
     {
-        $layout = $page->getLayout();
-
-        foreach ($layout->getItemFormats() as $id => $format) {
-            $item = $page->item($id);
-
-            if (!$item->isVisible()) {
-                continue;
-            }
-
-            switch (true) {
-                case $item->isTypeOf('s-tblock'):
-                    if ($item->hasReference() || $item->isPresent()) {
-                        $this->renderTextBlockItem($item);
-                    }
-                    break;
-                case $item->isTypeOf('s-iblock'):
-                    if ($item->isPresent()) {
-                        $this->renderImageBlockItem($item);
-                    }
-                    break;
-                case $item->isTypeOf('s-pageno'):
-                    if ($page->isCountable() && $item->isForReport()) {
-                        $this->renderPageNumberItem($item);
-                    }
-                    break;
-                case $item->isImage():
-                    $this->renderImageItem($item);
-                    break;
-                case $item->isText():
-                    $this->renderTextItem($item);
-                    break;
-                case $item->isRect():
-                    $this->renderRectItem($item);
-                    break;
-                case $item->isEllipse():
-                    $this->renderEllipseItem($item);
-                    break;
-                case $item->isLine():
-                    $this->renderLineItem($item);
-                    break;
-            }
+        foreach ($items as $item) {
+            $this->item_renderer->render($item);
         }
     }
 }

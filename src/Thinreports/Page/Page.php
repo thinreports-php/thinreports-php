@@ -17,7 +17,7 @@ class Page extends BlankPage
 {
     private $report;
     private $layout;
-    private $items = [];
+    private $items = array();
 
     /**
      * @param Report $report
@@ -93,6 +93,14 @@ class Page extends BlankPage
     }
 
     /**
+     * @return string[]
+     */
+    public function getItemIds()
+    {
+        return array_keys($this->layout->getItemFormats());
+    }
+
+    /**
      * @access private
      *
      * @return Report
@@ -110,5 +118,20 @@ class Page extends BlankPage
     public function getLayout()
     {
         return $this->layout;
+    }
+
+    /**
+     * @access private
+     *
+     * @return Thinreports\Item\AbstractItem[]
+     */
+    public function getFinalizedItems()
+    {
+        $items = array();
+
+        foreach ($this->getItemIds() as $id) {
+            $items[] = $this->item($id);
+        }
+        return $items;
     }
 }
