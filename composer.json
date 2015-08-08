@@ -22,13 +22,14 @@
   "require-dev": {
     "phpunit/phpunit": "~4.6",
     "satooshi/php-coveralls": "dev-master",
-    "symfony/Yaml": "^2.7"
+    "symfony/Yaml": "~2.7",
+    "smalot/pdfparser": "~0.9"
   },
   "autoload": {
     "psr-4": { "Thinreports\\": "src/Thinreports" }
   },
   "autoload-dev": {
-    "psr-4": { "Thinreports\\": "test/Thinreports" }
+    "psr-4": { "Thinreports\\": "test/unit/Thinreports" }
   },
   "extra": {
     "branch-alias": {
