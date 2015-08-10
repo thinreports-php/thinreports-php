@@ -32,9 +32,10 @@ Please see the following pages for further details.
   * [Discussion Group on Gitter](https://gitter.im/thinreports-php/thinreports-php?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
   * [Development Community](#development-community)
 
-## Requirements
+## Supported PHP versions
 
-  * PHP 5.6
+  * PHP 5.3, 5.4, 5.5, 5.6, 7
+  * See [build result on TravisCI](https://travis-ci.org/thinreports-php/thinreports-php)
 
 ## Compatibility with Thinreports
 
@@ -57,7 +58,7 @@ Put this line in your composer.json:
 Then `composer install` or `composer update`:
 
     $ composer install
-    -- or --
+    or
     $ composer update
 
 ### Step3 Create a report format file using the Editor
@@ -69,8 +70,6 @@ Follow ["Step1 Creating the layout for the report"](http://www.thinreports.org/d
 ```php
 <?php
 // date_default_timezone_set('Asia/Tokyo');
-
-use Thinreports;
 
 $report = new Thinreports\Report('hello_world.tlf');
 
@@ -91,16 +90,20 @@ $page('world')->setValue('World')
 $page('hello')->hide();
 
 // 4th page
-$report->addPage(function ($new_page) {
-    $new_page->item('world')->setValue('Japan');
-});
+$page = $report->addPage();
+$page->setItemValue('thinreports', 'PDF');
+$page->setItemValues(array(
+  'world' => 'PHP'
+));
 
 // 5th page
 $page = $report->addPage();
-$page->setItemValue('thinreports', 'PDF');
-$page->setItemValues(['world' => 'PHP']);
+$page->item('world_image')->setSource('/path/to/world.png');
 
 $report->generate('hello_world.pdf');
+
+// You can get content of the PDF in the following code:
+$pdf_data = $report->generate();
 ```
 
 **NOTE:**
