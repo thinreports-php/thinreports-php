@@ -23,6 +23,19 @@ Please see the following pages for further details.
   * [Thinreports official site](http://www.thinreports.org)
   * [Thinreports GitHub](https://github.com/thinreports)
 
+----
+
+## Plans of version 0.8.0
+
+  * Performance improvements on rendering texts with unicode-fonts
+  * Multiple layouts support
+  * Memory usage improvement
+  * ~~List support~~ (**won't fix**)
+
+See also: [CHANGELOG of version alpha1 and 2](CHANGELOG.md).
+
+----
+
 ## Getting Started
 
   * [Features](#features)
@@ -49,17 +62,7 @@ See the [Official Installation Guide](http://www.thinreports.org/documentation/e
 
 ### Step2 Install Thinreports Generator for PHP
 
-Put this line in your composer.json:
-
-    "require": {
-      "thinreports-php/thinreports-php": "@alpha"
-    }
-
-Then `composer install` or `composer update`:
-
-    $ composer install
-    or
-    $ composer update
+    $ composer require thinreports-php/thinreports-php:0.8.0-alpha2 --dev
 
 ### Step3 Create a report format file using the Editor
 
