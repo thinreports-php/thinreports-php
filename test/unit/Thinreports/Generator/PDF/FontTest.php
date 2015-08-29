@@ -10,6 +10,21 @@ class FontTest extends TestCase
         Font::$installed_builtin_fonts = array();
     }
 
+    function test_init()
+    {
+        Font::init();
+
+        $this->assertEquals(
+            array(
+                'IPAMincho',
+                'IPAPMincho',
+                'IPAGothic',
+                'IPAPGothic'
+            ),
+            array_keys(Font::$installed_builtin_fonts)
+        );
+    }
+
     function test_getFontName()
     {
         $this->assertEquals('Helvetica', Font::getFontName('Helvetica'));

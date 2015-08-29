@@ -31,6 +31,13 @@ class Font
         'Times New Roman' => 'Times'
     );
 
+    static public function init()
+    {
+        foreach (array_keys(self::$builtin_unicode_fonts) as $name) {
+            self::installBuiltinFont($name);
+        }
+    }
+
     /**
      * @param string $name
      * @return string
