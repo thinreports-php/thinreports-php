@@ -14,6 +14,8 @@ namespace Thinreports\Generator\PDF;
  */
 class Font
 {
+    const STORE_PATH = '/../../../../fonts';
+
     /**
      * @var string[]
      */
@@ -88,7 +90,7 @@ class Font
      */
     static public function getBuiltinFontPath($name)
     {
-        $font_directory = realpath(__DIR__ . '/../../../../fonts');
+        $font_directory = realpath(__DIR__ . self::STORE_PATH);
         return $font_directory . '/' . self::$builtin_unicode_fonts[$name];
     }
 
