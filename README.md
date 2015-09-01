@@ -62,7 +62,7 @@ See the [Official Installation Guide](http://www.thinreports.org/documentation/e
 
 ### Step2 Install Thinreports Generator for PHP
 
-    $ composer require thinreports-php/thinreports-php:0.8.0-alpha2 --dev
+    $ composer require thinreports-php/thinreports-php:0.8.0-alpha2
 
 ### Step3 Create a report format file using the Editor
 
