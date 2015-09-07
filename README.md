@@ -29,10 +29,8 @@ Please see the following pages for further details.
 
   * Performance improvements on rendering texts with unicode-fonts
   * Multiple layouts support
-  * Memory usage improvement
-  * ~~List support~~ (**won't fix**)
 
-See also: [CHANGELOG of version alpha1 and 2](CHANGELOG.md).
+See also: [Changes in version alpha1 and alpha2](CHANGELOG.md).
 
 ----
 
