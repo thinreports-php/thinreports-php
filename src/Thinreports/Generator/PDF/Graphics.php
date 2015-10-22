@@ -81,6 +81,15 @@ class Graphics
     {
         $style = $this->buildGraphicStyles($attrs);
 
+        $drawStyle ="";
+        if(isset($style["stroke"])){
+            $drawStyle.="D";
+        }
+        if(isset($style['fill'])){
+            $drawStyle.="F";
+        }
+
+
         if (empty($attrs['radius'])) {
             $this->pdf->Rect($x, $y, $width, $height,
                 null, array('all' => $style['stroke']), $style['fill']);
