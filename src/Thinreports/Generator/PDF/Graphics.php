@@ -190,7 +190,7 @@ class Graphics
             $stroke_color = ColorParser::parse($attrs['stroke_color']);
             $style .= 'D';
             if ($attrs['stroke_dash'] === 'none') {
-                $stroke_dash = null;
+                $stroke_dash = 0;
             } else {
                 $stroke_dash = $attrs['stroke_dash'];
             }
