@@ -245,12 +245,14 @@ class ItemRenderer extends AbstractRenderer
     {
         $bounds = $item->getBounds();
 
+
         $this->doc->graphics->drawLine(
             $bounds['x1'],
             $bounds['y1'],
             $bounds['x2'],
             $bounds['y2'],
-            $this->normalizeGraphicStyles($item->exportStyles())
+//            $this->normalizeGraphicStyles($item->exportStyles())
+            $item->exportStyles()
         );
     }
 

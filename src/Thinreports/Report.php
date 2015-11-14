@@ -39,12 +39,26 @@ class Report
      *  $page->addPage();
      *  $page->addPage(array('count' => false));
      */
-    public function addPage(array $options = null)
+    public function addPage()
     {
+        $args = func_get_args();
+        $layout = $this->layout;
+        $options = null;
+
+        if (isset($args) && array_key_exists('0', $args)) {
+            if (is_string($args[0])) {
+                $layout = Layout::loadFile($args[0]);
+            } else if (is_array($args[0])) {
+                $options = $args[0];
+            }
+        } else if (isset($args) && array_key_exists('1', $args)) {
+            $options = $args[1];
+        }
+
         $options     = $this->pageOptionValues($options);
         $page_number = $this->getNextPageNumber($options['count']);
 
-        $new_page = new Page\Page($this, $this->layout, $page_number, $options['count']);
+        $new_page = new Page\Page($this, $layout, $page_number, $options['count']);
         $this->pages[] = $new_page;
 
         return $new_page;

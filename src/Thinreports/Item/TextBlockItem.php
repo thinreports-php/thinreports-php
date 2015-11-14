@@ -140,4 +140,15 @@ class TextBlockItem extends AbstractBlockItem
     {
         return $this->format['ref-id'] !== '';
     }
+
+    /**
+     * @param $propaty
+     */
+    public function setAlign($propaty) {
+        if ($propaty !== "right" and $propaty !== "left" and $propaty !== "center") {
+            return;
+        }
+
+        return $this->style->set_align($propaty);
+    }
 }
