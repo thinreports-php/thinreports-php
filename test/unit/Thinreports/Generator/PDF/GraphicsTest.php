@@ -230,7 +230,7 @@ class GraphicsTest extends TestCase
     {
         $test_graphics = new Graphics($this->tcpdf);
 
-        $this->assertEquals(
+        $this->assertSame(
             $expected_result,
             $test_graphics->buildGraphicStyles($attrs)
         );
@@ -259,7 +259,7 @@ class GraphicsTest extends TestCase
                     'stroke' => array(
                         'width' => '1',
                         'color' => array(),
-                        'dash' => null
+                        'dash' => 0
                     ),
                     'fill' => array(0, 0, 0)
                 ),
