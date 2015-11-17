@@ -53,7 +53,7 @@ class GraphicsTest extends TestCase
                         200.0,
                         300.0,
                         400.0,
-                        null,
+                        'DF',
                         array(
                             'all' => array(
                                 'width' => '2',
@@ -87,7 +87,7 @@ class GraphicsTest extends TestCase
                         400.0,
                         1,
                         '1111',
-                        null,
+                        'DF',
                         array(
                             'width' => '2',
                             'color' => array(255, 255, 255),
@@ -123,7 +123,7 @@ class GraphicsTest extends TestCase
                         0,
                         0,
                         360,
-                        null,
+                        'DF',
                         array(
                             'width' => '3',
                             'color' => array(0, 0, 255),
@@ -241,14 +241,16 @@ class GraphicsTest extends TestCase
             array(
                 array(
                     'stroke' => null,
-                    'fill' => array()
+                    'fill' => array(),
+                    'style' =>'',
                 ),
                 array()
             ),
             array(
                 array(
                     'stroke' => null,
-                    'fill' => array()
+                    'fill' => array(),
+                    'style' =>'',
                 ),
                 array(
                     'fill_color' => 'none'
@@ -261,7 +263,8 @@ class GraphicsTest extends TestCase
                         'color' => array(),
                         'dash' => null
                     ),
-                    'fill' => array(0, 0, 0)
+                    'fill' => array(0, 0, 0),
+                    'style' =>'DF',
                 ),
                 array(
                     'stroke_width' => '1',
@@ -277,7 +280,8 @@ class GraphicsTest extends TestCase
                         'color' => array(0, 0, 0),
                         'dash' => '1,2'
                     ),
-                    'fill' => array()
+                    'fill' => array(),
+                    'style' =>'D',
                 ),
                 array(
                     'stroke_width' => 1.5,
