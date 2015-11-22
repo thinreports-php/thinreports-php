@@ -104,7 +104,7 @@ you need to configure the IPAFont to font-family property of the Text-block in t
 
 ### Implemented
 
-See [Quick Start](#quick-start) and [Quick Reference](#quick-reference)
+See [Quick Start](#quick-start) and [Quick Reference](https://github.com/thinreports-php/thinreports-php/wiki/Quick-Reference)
 for currently available features.
 
 ### Not Implemented
