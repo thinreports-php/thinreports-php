@@ -23,7 +23,7 @@ class TextFormatter
      */
     public function format($value)
     {
-        if (is_null($value) || $value === '') {
+        if ($value === null || $value === '') {
             return $value;
         }
 
@@ -103,7 +103,7 @@ class TextFormatter
         $direction = $padding_format['direction'];
         $length = intval($padding_format['length']);
 
-        if (is_null($character) || $character === '' || $length === 0) {
+        if ($character === null || $character === '' || $length === 0) {
             return $value;
         }
         if (mb_strlen($value, 'UTF-8') >= $length) {

@@ -159,7 +159,7 @@ class Graphics
         $registry_key = md5($base64_string);
         $image_path = $this->getRegisteredImagePath($registry_key);
 
-        if (is_null($image_path)) {
+        if ($image_path === null) {
             $image_path = tempnam(sys_get_temp_dir(), 'thinreports');
             $this->image_registry[$registry_key] = $image_path;
             file_put_contents($image_path, base64_decode($base64_string));

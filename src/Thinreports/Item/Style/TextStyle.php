@@ -196,10 +196,10 @@ class TextStyle extends BasicStyle
     {
         $decorations = array();
 
-        if (is_null($underline)) {
+        if ($underline === null) {
             $underline = $this->get_underline();
         }
-        if (is_null($linethrough)) {
+        if ($linethrough === null) {
             $linethrough = $this->get_linethrough();
         }
 
