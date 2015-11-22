@@ -34,14 +34,14 @@ class Layout
             throw new Exception\StandardException('Layout File Not Found', $filename);
         }
 
-        return self::parse(file_get_contents($filename, true));
+        return new self($filename, self::parse(file_get_contents($filename, true)));
     }
 
     /**
      * @access private
      *
      * @param string $file_content
-     * @return self
+     * @return array
      * @throws Exception\IncompatibleLayout
      */
     static public function parse($file_content)
@@ -59,7 +59,10 @@ class Layout
         $item_formats = self::extractItemFormats($format['svg']);
         self::cleanFormat($format);
 
-        return new self($format, $item_formats);
+        return array(
+            'format' => $format,
+            'item_formats' => $item_formats
+        );
     }
 
     /**
@@ -143,29 +146,26 @@ class Layout
     private $identifier;
 
     /**
-     * @param array $format
-     * @param array $item_foramts
+     * @param string $filename
+     * @param array $deinition array('format' => array, 'item_formats' => array)
      */
-    public function __construct(array $format, array $item_formats)
+    public function __construct($filename, array $definition)
     {
-        $this->format = $format;
-        $this->item_formats = $item_formats;
-        $this->identifier = md5($format['svg']);
+        $this->filename = $filename;
+        $this->format = $definition['format'];
+        $this->item_formats = $definition['item_formats'];
+        $this->identifier = md5($this->format['svg']);
     }
 
     /**
-     * @access private
-     *
      * @return string
      */
-    public function getLastVersion()
+    public function getFilename()
     {
-        return $this->format['version'];
+        return $this->filename;
     }
 
     /**
-     * @access private
-     *
      * @return string
      */
     public function getReportTitle()
@@ -174,8 +174,6 @@ class Layout
     }
 
     /**
-     * @access private
-     *
      * @return string
      */
     public function getPagePaperType()
@@ -184,8 +182,6 @@ class Layout
     }
 
     /**
-     * @access private
-     *
      * @return string[]|null
      */
     public function getPageSize()
@@ -199,8 +195,6 @@ class Layout
     }
 
     /**
-     * @access private
-     *
      * @return boolean
      */
     public function isPortraitPage()
@@ -209,13 +203,21 @@ class Layout
     }
 
     /**
-     * @access private
-     *
      * @return boolean
      */
     public function isUserPaperType()
     {
         return $this->format['config']['page']['paper-type'] === 'user';
+    }
+
+    /**
+     * @access private
+     *
+     * @return string
+     */
+    public function getLastVersion()
+    {
+        return $this->format['version'];
     }
 
     /**

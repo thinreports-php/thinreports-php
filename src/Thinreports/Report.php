@@ -14,54 +14,59 @@ use Thinreports\Generator;
 
 class Report
 {
-    private $layout;
+    private $default_layout = null;
+    private $layouts = array();
 
     private $pages = array();
     private $page_count = 0;
     private $start_page_number = 1;
 
     /**
-     * @param string $layout_filename
+     * @param string|null $default_layout_filename
      */
-    public function __construct($layout_filename)
+    public function __construct($default_layout_filename = null)
     {
-        $this->layout = Layout::loadFile($layout_filename);
+        if ($default_layout_filename !== null) {
+            $this->default_layout = $this->buildLayout($default_layout_filename);
+        }
     }
 
     /**
-     * @param array $options {
-     *      @option boolean "count" optional
-     * }
+     * @param string|null $layout_filename
+     * @param boolean $countable
      * @return Page\Page
      *
      * Usage example:
      *
+     *  # Use default layout, count number of pages
      *  $page->addPage();
-     *  $page->addPage(array('count' => false));
+     *
+     *  # Use other_layout.tlf, count number of pages
+     *  $page->addPage('other_layout.tlf');
+     *
+     *  # Use default layout, don't count number of pages
+     *  $page->addPage(null, false);
      */
-    public function addPage(array $options = null)
+    public function addPage($layout_filename = null, $countable = true)
     {
-        $options     = $this->pageOptionValues($options);
-        $page_number = $this->getNextPageNumber($options['count']);
+        $layout = $this->loadLayout($layout_filename);
+        $page_number = $this->getNextPageNumber($countable);
 
-        $new_page = new Page\Page($this, $this->layout, $page_number, $options['count']);
+        $new_page = new Page\Page($this, $layout, $page_number, $countable);
         $this->pages[] = $new_page;
 
         return $new_page;
     }
 
     /**
-     * @param array|null $options {
-     *      @option boolean "count" optional
-     * }
+     * @param boolean $countable
      * @return Page\BlankPage
      */
-    public function addBlankPage(array $options = null)
+    public function addBlankPage($countable = true)
     {
-        $options     = $this->pageOptionValues($options);
-        $page_number = $this->getNextPageNumber($options['count']);
+        $page_number = $this->getNextPageNumber($countable);
 
-        $blank_page = new Page\BlankPage($page_number, $options['count']);
+        $blank_page = new Page\BlankPage($page_number, $countable);
         $this->pages[] = $blank_page;
 
         return $blank_page;
@@ -130,7 +135,7 @@ class Report
      */
     public function getDefaultLayout()
     {
-        return $this->layout;
+        return $this->default_layout;
     }
 
     /**
@@ -152,18 +157,33 @@ class Report
     /**
      * @access private
      *
-     * @param array|null $options {
-     *      @option string "count" optional
-     * }
-     * @return array
+     * @param string|null $layout_filename
+     * @return Layout
      */
-    private function pageOptionValues(array $options = null)
+    public function loadLayout($layout_filename = null)
     {
-        $values = array('count' => true);
-
-        if (is_array($options) && array_key_exists('count', $options)) {
-            $values['count'] = $options['count'] === true;
+        if ($layout_filename !== null) {
+            return $this->buildLayout($layout_filename);
         }
-        return $values;
+
+        if ($this->default_layout === null) {
+            throw new Exception\StandardException('Layout Not Specified');
+        } else {
+            return $this->default_layout;
+        }
+    }
+
+    /**
+     * @access private
+     *
+     * @param string $layout_filename
+     * @return Layout
+     */
+    public function buildLayout($layout_filename)
+    {
+        if (!array_key_exists($layout_filename, $this->layouts)) {
+            $this->layouts[$layout_filename] = Layout::loadFile($layout_filename);
+        }
+        return $this->layouts[$layout_filename];
     }
 }

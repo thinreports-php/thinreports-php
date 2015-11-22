@@ -19,11 +19,6 @@ class Document
     private $pdf;
 
     /**
-     * @var array
-     */
-    private $default_page_format;
-
-    /**
      * @var Graphics
      * @access public
      */
@@ -36,15 +31,23 @@ class Document
     public $text;
 
     /**
-     * @param Layout $default_layout
+     * @var array
      */
-    public function __construct(Layout $default_layout)
+    private $page_formats = array();
+
+    /**
+     * @var Layout The layout that inserted at last.
+     */
+    private $last_page_layout = null;
+
+    /**
+     * @param Layout|null $default_layout
+     */
+    public function __construct(Layout $default_layout = null)
     {
         $this->pdf = new \TCPDF('P', 'pt', 'A4', true, 'UTF-8');
 
-        $this->pdf->SetTitle($default_layout->getReportTitle());
         $this->pdf->SetCreator('Thinreports Generator');
-
         $this->pdf->SetAutoPageBreak(false);
         $this->pdf->SetMargins(0, 0, 0, true);
         $this->pdf->SetCellPadding(0);
@@ -52,10 +55,12 @@ class Document
         $this->pdf->SetPrintHeader(false);
         $this->pdf->SetPrintFooter(false);
 
-        $this->initializeDrawer();
+        if ($default_layout !== null) {
+            $this->pdf->SetTitle($default_layout->getReportTitle());
+            $this->registerPageFormat($default_layout);
+        }
 
-        $this->default_layout = $default_layout;
-        $this->default_page_format = $this->buildPageFormat($default_layout);
+        $this->initDrawer();
     }
 
     /**
@@ -63,18 +68,20 @@ class Document
      */
     public function addPage(Layout $layout)
     {
-        if ($layout->getIdentifier() === $this->default_layout->getIdentifier()) {
-            $page_format = $this->default_page_format;
-        } else {
-            $page_format = $this->buildPageFormat($layout);
-        }
-
+        $page_format = $this->registerPageFormat($layout);
         $this->pdf->AddPage($page_format['orientation'], $page_format['size']);
+
+        $this->last_page_layout = $layout;
     }
 
     public function addBlankPage()
     {
-        $this->addPage($this->default_layout);
+        if ($this->last_page_layout !== null) {
+            $page_format = $this->getRegisteredPageFormat($this->last_page_layout->getIdentifier());
+        } else {
+            $page_format = array('orientation' => 'P', 'size' => 'A4');
+        }
+        $this->pdf->AddPage($page_format['orientation'], $page_format['size']);
     }
 
     /**
@@ -121,7 +128,30 @@ class Document
         );
     }
 
-    private function initializeDrawer()
+    /**
+     * @param Layout $layout
+     * @return array
+     */
+    public function registerPageFormat(Layout $layout)
+    {
+        $layout_identifier = $layout->getIdentifier();
+
+        if (!array_key_exists($layout_identifier, $this->page_formats)) {
+            $this->page_formats[$layout_identifier] = $this->buildPageFormat($layout);
+        }
+        return $this->getRegisteredPageFormat($layout_identifier);
+    }
+
+    /**
+     * @param string $layout_identifier
+     * @return array
+     */
+    public function getRegisteredPageFormat($layout_identifier)
+    {
+        return $this->page_formats[$layout_identifier];
+    }
+
+    public function initDrawer()
     {
         $this->graphics = new Graphics($this->pdf);
         $this->text     = new Text($this->pdf);

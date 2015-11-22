@@ -3,6 +3,13 @@ require_once __DIR__ . '/../test_helper.php';
 
 class ReportAndPageFeature extends FeatureTest
 {
+    private $layout_geometries = array(
+        'A3_portrait'  => array('width' => 841.89,  'height' => 1190.551),
+        'A4_portrait'  => array('width' => 595.276, 'height' => 841.89),
+        'A4_landscape' => array('width' => 841.89,  'height' => 595.276, ),
+        'user_400x400' => array('width' => 400.0,   'height' => 400.0)
+    );
+
     function test_reportProperties()
     {
         $report = new Thinreports\Report(__DIR__ . '/layouts/report_with_title.tlf');
@@ -32,23 +39,73 @@ class ReportAndPageFeature extends FeatureTest
     /**
      * @dataProvider pageFormatPatternProvider
      */
-    function test_basicPageFormats($layout_file, $page_width, $page_height)
+    function test_basicPageFormats($layout_filename, $layout_page_size)
     {
-        $report = new Thinreports\Report(__DIR__ . "/layouts/{$layout_file}");
+        $report = new Thinreports\Report(__DIR__ . "/layouts/{$layout_filename}.tlf");
         $report->addPage();
 
         $analyzer = $this->analyzePDF($report->generate());
         $page_size = $analyzer->getSizeOfPage(1);
 
-        $this->assertEquals($page_width, $page_size['width']);
-        $this->assertEquals($page_height, $page_size['height']);
+        $this->assertEquals($layout_page_size['width'], $page_size['width']);
+        $this->assertEquals($layout_page_size['height'], $page_size['height']);
     }
     function pageFormatPatternProvider()
     {
-        return array(
-            array('A4_portrait.tlf',  595.276, 841.89),
-            array('A4_landscape.tlf', 841.89,  595.276),
-            array('user_400x400.tlf', 400.0,   400.0)
+        $page_formats = array();
+
+        foreach ($this->layout_geometries as $filename => $size) {
+            $page_formats[] = array($filename, $size);
+        }
+        # It will returns like this:
+        #   array(
+        #       array('A3_portrait', array('width' => 841.89, 'height' => 1190.55),
+        #       array('A4_landscape', ...),
+        #          :
+        #   )
+        return $page_formats;
+    }
+
+    function test_multipleLayouts()
+    {
+        $report = new Thinreports\Report(__DIR__ . '/layouts/A4_landscape.tlf');
+
+        foreach (array_keys($this->layout_geometries) as $filename) {
+            $report->addPage(__DIR__ . "/layouts/{$filename}.tlf");
+            # Insert a blank page
+            $report->addBlankPage();
+        }
+        # Finally, insert a page without specifing layout
+        $report->addPage();
+
+        $analyzer = $this->analyzePDF($report->generate());
+
+        $expected_page_formats = array(
+            array('size' => $this->layout_geometries['A3_portrait'],  'blank' => false),
+            array('size' => $this->layout_geometries['A3_portrait'],  'blank' => true),
+            array('size' => $this->layout_geometries['A4_portrait'],  'blank' => false),
+            array('size' => $this->layout_geometries['A4_portrait'],  'blank' => true),
+            array('size' => $this->layout_geometries['A4_landscape'], 'blank' => false),
+            array('size' => $this->layout_geometries['A4_landscape'], 'blank' => true),
+            array('size' => $this->layout_geometries['user_400x400'], 'blank' => false),
+            array('size' => $this->layout_geometries['user_400x400'], 'blank' => true),
+            array('size' => $this->layout_geometries['A4_landscape'], 'blank' => false)
         );
+
+        foreach ($expected_page_formats as $index => $expected_page_format) {
+            $page_no = $index + 1;
+
+            $expected_page_size     = $expected_page_format['size'];
+            $expected_is_blank_page = $expected_page_format['blank'];
+
+            $actual_page_size = $analyzer->getSizeOfPage($page_no);
+            $actual_is_blank_page = $analyzer->isEmptyPage($page_no);
+
+            $subject = "At page {$page_no}";
+
+            $this->assertEquals($expected_page_size['width'], $actual_page_size['width'], $subject);
+            $this->assertEquals($expected_page_size['height'], $actual_page_size['height'], $subject);
+            $this->assertEquals($expected_is_blank_page, $actual_is_blank_page, $subject);
+        }
     }
 }

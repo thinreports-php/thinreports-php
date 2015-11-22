@@ -70,7 +70,11 @@ class PDFAnalyzer
 
     public function isEmptyPage($page_number)
     {
-        return $this->getTextsInPage($page_number) == "\nPowered by TCPDF (www.tcpdf.org) ";
+        $texts = str_replace(
+            "\nPowered by TCPDF (www.tcpdf.org) ", '',
+            $this->getTextsInPage($page_number)
+        );
+        return $texts === ' ' || $texts === '';
     }
 
     public function getImageContentsInPage($page_number)

@@ -21,8 +21,11 @@ class PageTest extends TestCase
             array('text', 'default')
         ));
 
-        $this->report = new Report($this->dataLayoutFile('empty.tlf'));
-        $this->layout = new Layout(array('svg' => '<svg></svg>'), $this->item_formats);
+        $this->report = new Report($this->dataLayoutFile('empty_A4P.tlf'));
+        $this->layout = new Layout('dummy.tlf', array(
+            'format' => array('svg' => '<svg></svg>'),
+            'item_formats' => $this->item_formats
+        ));
     }
 
     private function newPage($is_countable = true)
