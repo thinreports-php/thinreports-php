@@ -6,7 +6,7 @@ class ReportAndPageFeature extends FeatureTest
     private $layout_geometries = array(
         'A3_portrait'  => array('width' => 841.89,  'height' => 1190.551),
         'A4_portrait'  => array('width' => 595.276, 'height' => 841.89),
-        'A4_landscape' => array('width' => 841.89,  'height' => 595.276, ),
+        'A4_landscape' => array('width' => 841.89,  'height' => 595.276),
         'user_400x400' => array('width' => 400.0,   'height' => 400.0)
     );
 
@@ -81,31 +81,31 @@ class ReportAndPageFeature extends FeatureTest
         $analyzer = $this->analyzePDF($report->generate());
 
         $expected_page_formats = array(
-            array('size' => $this->layout_geometries['A3_portrait'],  'blank' => false),
-            array('size' => $this->layout_geometries['A3_portrait'],  'blank' => true),
-            array('size' => $this->layout_geometries['A4_portrait'],  'blank' => false),
-            array('size' => $this->layout_geometries['A4_portrait'],  'blank' => true),
-            array('size' => $this->layout_geometries['A4_landscape'], 'blank' => false),
-            array('size' => $this->layout_geometries['A4_landscape'], 'blank' => true),
-            array('size' => $this->layout_geometries['user_400x400'], 'blank' => false),
-            array('size' => $this->layout_geometries['user_400x400'], 'blank' => true),
-            array('size' => $this->layout_geometries['A4_landscape'], 'blank' => false)
+            array('size' => $this->layout_geometries['A3_portrait'],  'is_blank' => false),
+            array('size' => $this->layout_geometries['A3_portrait'],  'is_blank' => true),
+            array('size' => $this->layout_geometries['A4_portrait'],  'is_blank' => false),
+            array('size' => $this->layout_geometries['A4_portrait'],  'is_blank' => true),
+            array('size' => $this->layout_geometries['A4_landscape'], 'is_blank' => false),
+            array('size' => $this->layout_geometries['A4_landscape'], 'is_blank' => true),
+            array('size' => $this->layout_geometries['user_400x400'], 'is_blank' => false),
+            array('size' => $this->layout_geometries['user_400x400'], 'is_blank' => true),
+            array('size' => $this->layout_geometries['A4_landscape'], 'is_blank' => false)
         );
 
         foreach ($expected_page_formats as $index => $expected_page_format) {
             $page_no = $index + 1;
 
             $expected_page_size     = $expected_page_format['size'];
-            $expected_is_blank_page = $expected_page_format['blank'];
+            $expected_page_is_blank = $expected_page_format['is_blank'];
 
             $actual_page_size = $analyzer->getSizeOfPage($page_no);
-            $actual_is_blank_page = $analyzer->isEmptyPage($page_no);
+            $actual_page_is_blank = $analyzer->isEmptyPage($page_no);
 
             $subject = "At page {$page_no}";
 
             $this->assertEquals($expected_page_size['width'], $actual_page_size['width'], $subject);
             $this->assertEquals($expected_page_size['height'], $actual_page_size['height'], $subject);
-            $this->assertEquals($expected_is_blank_page, $actual_is_blank_page, $subject);
+            $this->assertEquals($expected_page_is_blank, $actual_page_is_blank, $subject);
         }
     }
 }
