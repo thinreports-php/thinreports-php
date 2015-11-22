@@ -23,23 +23,12 @@ Please see the following pages for further details.
   * [Thinreports official site](http://www.thinreports.org)
   * [Thinreports GitHub](https://github.com/thinreports)
 
-----
-
-## Plans of version 0.8.0
-
-  * Performance improvements on rendering texts with unicode-fonts
-  * Multiple layouts support
-
-See also: [Changes in version alpha1 and alpha2](CHANGELOG.md).
-
-----
-
 ## Getting Started
 
   * [Features](#features)
   * [Roadmap](https://github.com/thinreports-php/thinreports-php/milestones)
   * [Quick Start](#quick-start)
-  * [Quick Reference](#quick-reference)
+  * [Quick Reference](https://github.com/thinreports-php/thinreports-php/wiki/Quick-Reference)
   * [Discussion Group on Gitter](https://gitter.im/thinreports-php/thinreports-php?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
   * [Development Community](#development-community)
 
@@ -60,7 +49,7 @@ See the [Official Installation Guide](http://www.thinreports.org/documentation/e
 
 ### Step2 Install Thinreports Generator for PHP
 
-    $ composer require thinreports-php/thinreports-php:0.8.0-alpha2
+    $ composer require thinreports-php/thinreports-php
 
 ### Step3 Create a report format file using the Editor
 
@@ -111,10 +100,6 @@ $pdf_data = $report->generate();
 If you want to render multi-byte characters such as "日本語",
 you need to configure the IPAFont to font-family property of the Text-block in the Editor.
 
-## Quick Reference
-
-TODO: Write a reference
-
 ## Features
 
 ### Implemented
@@ -125,17 +110,13 @@ for currently available features.
 ### Not Implemented
 
   * List
-  * Multiple Layouts
   * Disabling Hyphenation
   * Font Fallback
   * Permission and Security settings of PDF
 
 ### Other Tasks
 
-  * Memory Usage Optimization
-    * Disposing raw base64-data after generating a image file
-  * Performance Optimization
-    * Pre-Converting IPA-Font to AFM from TTF
+  * Memory Usage Optimization - Disposing raw base64-data after generating a image file
 
 ## Development Community
 
