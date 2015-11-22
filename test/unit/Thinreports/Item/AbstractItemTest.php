@@ -31,7 +31,7 @@ class AbstractItemTest extends TestCase
 
     function setup()
     {
-        $report = new Report($this->dataLayoutFile('empty.tlf'));
+        $report = new Report($this->dataLayoutFile('empty_A4P.tlf'));
         $this->page = $report->addPage();
     }
 

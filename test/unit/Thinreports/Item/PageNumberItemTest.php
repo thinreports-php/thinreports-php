@@ -12,7 +12,7 @@ class PageNumberItemTest extends TestCase
 
     function setup()
     {
-        $this->report = new Report($this->dataLayoutFile('empty.tlf'));
+        $this->report = new Report($this->dataLayoutFile('empty_A4P.tlf'));
         $this->page = $this->report->addPage();
     }
 

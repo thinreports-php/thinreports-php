@@ -15,7 +15,7 @@ class LayoutTest extends TestCase
             $this->assertEquals('Layout File Not Found', $e->getSubject());
         }
 
-        $layout = Layout::loadFile($this->dataLayoutFile('empty.tlf'));
+        $layout = Layout::loadFile($this->dataLayoutFile('empty_A4P.tlf'));
         $this->assertInstanceOf('Thinreports\Layout', $layout);
 
         $layout = Layout::loadFile($this->dataLayoutFile('all_items'));
@@ -40,8 +40,10 @@ class LayoutTest extends TestCase
             // OK
         }
 
-        $layout = Layout::parse('{"version":"0.8.2", "svg":"<svg></svg>"}');
-        $this->assertInstanceOf('Thinreports\Layout', $layout);
+        $parsed_format = Layout::parse('{"version":"0.8.2", "svg":"<svg></svg>"}');
+
+        $this->assertSame(array('version' => '0.8.2', 'svg' => '<svg></svg>'), $parsed_format['format']);
+        $this->assertSame(array(), $parsed_format['item_formats']);
     }
 
     function test_cleanFormat()
@@ -86,7 +88,10 @@ SVG;
     function test_hasItem()
     {
         $item_formats = array('foo_id' => array());
-        $layout = new Layout(array('svg' => '<svg></svg>'), $item_formats);
+        $layout = new Layout('dummy.tlf', array(
+            'format' => array('svg' => '<svg></svg>'),
+            'item_formats' => $item_formats
+        ));
 
         $this->assertTrue($layout->hasItem('foo_id'));
         $this->assertFalse($layout->hasItem('unknown_id'));
@@ -105,9 +110,12 @@ SVG;
             array('text', 'default')
         ));
 
-        $layout = new Layout(array('svg' => '<svg></svg>'), $item_formats);
+        $layout = new Layout('dummy.tlf', array(
+            'format' => array('svg' => '<svg></svg>'),
+            'item_formats' => $item_formats
+        ));
 
-        $dummy_report = new Report($this->dataLayoutFile('empty.tlf'));
+        $dummy_report = new Report($this->dataLayoutFile('empty_A4P.tlf'));
         $dummy_page   = $dummy_report->addPage();
 
         $this->assertInstanceOf(
@@ -169,7 +177,10 @@ SVG;
             'svg' => '<svg></svg>'
         );
 
-        $layout = new Layout($regular_paper_type_format, array());
+        $layout = new Layout('dummy.tlf', array(
+            'format' => $regular_paper_type_format,
+            'item_formats' => array()
+        ));
 
         $this->assertEquals('0.8.2', $layout->getLastVersion());
         $this->assertEquals('Report Title', $layout->getReportTitle());
@@ -193,7 +204,10 @@ SVG;
             'svg' => '<svg></svg>'
         );
 
-        $layout = new Layout($user_paper_type_format, array());
+        $layout = new Layout('dummy.tlf', array(
+            'format' => $user_paper_type_format,
+            'item_formats' => array()
+        ));
 
         $this->assertEquals('user', $layout->getPagePaperType());
         $this->assertTrue($layout->isUserPaperType());
@@ -206,7 +220,10 @@ SVG;
             'svg' => '<svg></svg>'
         );
 
-        $layout = new Layout($format, array());
+        $layout = new Layout('dummy.tlf', array(
+            'format' => $format,
+            'item_formats' => array()
+        ));
         $this->assertEquals(md5('<svg></svg>'), $layout->getIdentifier());
     }
 
@@ -217,7 +234,10 @@ SVG;
             'svg'     => '<svg></svg>'
         );
 
-        $layout = new Layout($format, array());
+        $layout = new Layout('dummy.tlf', array(
+            'format' => $format,
+            'item_formats' => array()
+        ));
         $this->assertSame($format, $layout->getFormat());
     }
 
@@ -227,7 +247,10 @@ SVG;
             'rect_id' => array('type' => 's-rect')
         );
 
-        $layout = new Layout(array('svg' => '<svg></svg>'), $item_formats);
+        $layout = new Layout('dummy.tlf', array(
+            'format' => array('svg' => '<svg></svg>'),
+            'item_formats' => $item_formats
+        ));
         $this->assertSame($item_formats, $layout->getItemFormats());
     }
 }
