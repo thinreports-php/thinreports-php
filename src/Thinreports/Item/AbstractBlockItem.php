@@ -37,7 +37,7 @@ abstract class AbstractBlockItem extends AbstractItem
     public function isEmpty()
     {
         $value = $this->getValue();
-        return is_null($value) || $value === '';
+        return $value === null || $value === '';
     }
 
     /**

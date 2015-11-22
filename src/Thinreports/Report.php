@@ -121,7 +121,7 @@ class Report
     {
         $pdf_data = Generator\PDFGenerator::generate($this);
 
-        if (is_null($filename)) {
+        if ($filename === null) {
             return $pdf_data;
         } else {
             return file_put_contents($filename, $pdf_data) !== false;
