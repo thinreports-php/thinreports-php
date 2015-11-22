@@ -10,9 +10,9 @@ class FontTest extends TestCase
         Font::$installed_builtin_fonts = array();
     }
 
-    function test_init()
+    function test_build()
     {
-        Font::init();
+        Font::build();
 
         $this->assertEquals(
             array(
