@@ -21,9 +21,9 @@
   },
   "require-dev": {
     "phpunit/phpunit": "~4.6",
-    "satooshi/php-coveralls": "dev-master",
     "symfony/Yaml": "~2.7",
-    "smalot/pdfparser": "~0.9"
+    "smalot/pdfparser": "~0.9",
+    "satooshi/php-coveralls": "~1.0"
   },
   "autoload": {
     "psr-4": { "Thinreports\\": "src/Thinreports" }
