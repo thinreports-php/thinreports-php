@@ -81,12 +81,14 @@ class Graphics
     {
         $style = $this->buildGraphicStyles($attrs);
 
+        $drawStyle ="";
+
         if (empty($attrs['radius'])) {
             $this->pdf->Rect($x, $y, $width, $height,
-                null, array('all' => $style['stroke']), $style['fill']);
+                $style['style'], array('all' => $style['stroke']), $style['fill']);
         } else {
             $this->pdf->RoundedRect($x, $y, $width, $height,
-                $attrs['radius'], '1111', null, $style['stroke'], $style['fill']);
+                $attrs['radius'], '1111', $style['style'], $style['stroke'], $style['fill']);
         }
     }
 
@@ -108,7 +110,7 @@ class Graphics
         $style = $this->buildGraphicStyles($attrs);
 
         $this->pdf->Ellipse($cx, $cy, $rx, $ry,
-            0, 0, 360, null, $style['stroke'], $style['fill']);
+            0, 0, 360, $style['style'], $style['stroke'], $style['fill']);
     }
 
     /**
@@ -181,11 +183,12 @@ class Graphics
      */
     public function buildGraphicStyles(array $attrs)
     {
+        $style = "";
         if (empty($attrs['stroke_width'])) {
             $stroke_style = null;
         } else {
             $stroke_color = ColorParser::parse($attrs['stroke_color']);
-
+            $style .= 'D';
             if ($attrs['stroke_dash'] === 'none') {
                 $stroke_dash = 0;
             } else {
@@ -200,12 +203,13 @@ class Graphics
         }
 
         if (array_key_exists('fill_color', $attrs) && $attrs['fill_color'] !== 'none') {
+            $style .= 'F';
             $fill_color = ColorParser::parse($attrs['fill_color']);
         } else {
             $fill_color = array();
         }
 
-        return array('stroke' => $stroke_style, 'fill' => $fill_color);
+        return array('stroke' => $stroke_style, 'fill' => $fill_color, 'style' => $style);
     }
 
     /**
