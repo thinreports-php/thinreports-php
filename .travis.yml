@@ -32,3 +32,7 @@ script: ./vendor/bin/phpunit
 
 after_script:
   - php vendor/bin/coveralls
+
+branches:
+  only:
+    - master
