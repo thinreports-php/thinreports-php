@@ -71,6 +71,23 @@ class TextTest extends TestCase
         );
     }
 
+    function test_drawTextBox_with_color_none()
+    {
+        $this->tcpdf->expects($this->never())
+                    ->method('MultiCell');
+
+        $test_text = new Text($this->tcpdf);
+        $test_text->drawTextBox(
+            "row1\nrow2", 100, 200, 300, 400,
+            array(
+                'font_style' => array(),
+                'font_size' => '18',
+                'font_family' => 'Helvetica',
+                'color' => 'none'
+            )
+        );
+    }
+
     function test_drawText()
     {
         $this->tcpdf->expects($this->once())
@@ -130,13 +147,13 @@ class TextTest extends TestCase
                 'font_style' => array(),
                 'font_size' => '18',
                 'font_family' => 'Helvetica',
-                'color' => ''
+                'color' => 'none'
             ),
             'result' => array(
                 'font_size' => '18',
                 'font_family' => 'Helvetica',
                 'font_style' => '',
-                'color' => array(),
+                'color' => null,
                 'align' => 'L',
                 'valign' => 'T',
                 'line_height' => 1,

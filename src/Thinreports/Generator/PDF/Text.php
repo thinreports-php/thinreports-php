@@ -72,6 +72,10 @@ class Text
     {
         $styles = $this->buildTextBoxStyles($height, $attrs);
 
+        if ($styles['color'] === null) {
+            return;
+        }
+
         $this->setFontStyles($styles);
         $this->pdf->setFontSpacing($styles['letter_spacing']);
         $this->pdf->setCellHeightRatio($styles['line_height']);
@@ -168,11 +172,17 @@ class Text
             $valign = 'top';
         }
 
+        if ($attrs['color'] == 'none') {
+            $color = null;
+        } else {
+            $color = ColorParser::parse($attrs['color']);
+        }
+
         return array(
             'font_size'      => $attrs['font_size'],
             'font_family'    => Font::getFontName($attrs['font_family']),
             'font_style'     => implode('', $font_style),
-            'color'          => ColorParser::parse($attrs['color']),
+            'color'          => $color,
             'align'          => self::$pdf_text_align[$align],
             'valign'         => self::$pdf_text_valign[$valign],
             'line_height'    => $line_height,

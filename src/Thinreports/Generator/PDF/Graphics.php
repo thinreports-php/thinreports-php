@@ -60,6 +60,10 @@ class Graphics
     {
         $style = $this->buildGraphicStyles($attrs);
 
+        if ($style['stroke'] === null) {
+            return;
+        }
+
         $this->pdf->Line($x1, $y1, $x2, $y2, $style['stroke']);
     }
 
@@ -80,13 +84,14 @@ class Graphics
     public function drawRect($x, $y, $width, $height, array $attrs = array())
     {
         $style = $this->buildGraphicStyles($attrs);
+        $rendering_flag = $this->buildRenderingFlag($style['stroke'], $style['fill']);
 
         if (empty($attrs['radius'])) {
             $this->pdf->Rect($x, $y, $width, $height,
-                null, array('all' => $style['stroke']), $style['fill']);
+                $rendering_flag, array('all' => $style['stroke']), $style['fill']);
         } else {
-            $this->pdf->RoundedRect($x, $y, $width, $height,
-                $attrs['radius'], '1111', null, $style['stroke'], $style['fill']);
+            $this->pdf->RoundedRect($x, $y, $width, $height, $attrs['radius'], '1111',
+                $rendering_flag, $style['stroke'], $style['fill']);
         }
     }
 
@@ -106,9 +111,10 @@ class Graphics
     public function drawEllipse($cx, $cy, $rx, $ry, array $attrs = array())
     {
         $style = $this->buildGraphicStyles($attrs);
+        $rendering_flag = $this->buildRenderingFlag($style['stroke'], $style['fill']);
 
         $this->pdf->Ellipse($cx, $cy, $rx, $ry,
-            0, 0, 360, null, $style['stroke'], $style['fill']);
+            0, 0, 360, $rendering_flag, $style['stroke'], $style['fill']);
     }
 
     /**
@@ -181,7 +187,7 @@ class Graphics
      */
     public function buildGraphicStyles(array $attrs)
     {
-        if (empty($attrs['stroke_width'])) {
+        if (empty($attrs['stroke_width']) || $attrs['stroke_color'] == 'none') {
             $stroke_style = null;
         } else {
             $stroke_color = ColorParser::parse($attrs['stroke_color']);
@@ -202,10 +208,29 @@ class Graphics
         if (array_key_exists('fill_color', $attrs) && $attrs['fill_color'] !== 'none') {
             $fill_color = ColorParser::parse($attrs['fill_color']);
         } else {
-            $fill_color = array();
+            $fill_color = null;
         }
 
         return array('stroke' => $stroke_style, 'fill' => $fill_color);
+    }
+
+    /**
+     * @param array|null $stroke
+     * @param array|null $fill
+     * @return string
+     */
+    public function buildRenderingFlag($stroke, $fill)
+    {
+        $flag = array();
+
+        if ($stroke !== null) {
+            $flag[] = 'D';
+        }
+        if ($fill !== null) {
+            $flag[] = 'F';
+        }
+
+        return join('', $flag);
     }
 
     /**
