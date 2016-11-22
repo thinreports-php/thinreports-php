@@ -42,6 +42,32 @@ class GraphicsTest extends TestCase
                 'stroke_dash' => 'none'
             )
         );
+
+        $this->tcpdf->expects($this->never())
+                    ->method('Line');
+
+        $test_graphics->drawLine(
+            100.0,
+            200.0,
+            300.0,
+            400.0,
+            array(
+                'stroke_width' => '0',
+                'stroke_color' => '#000000',
+                'stroke_dash'  => 'none'
+            )
+        );
+        $test_graphics->drawLine(
+            100.0,
+            200.0,
+            300.0,
+            400.0,
+            array(
+                'stroke_width' => '1',
+                'stroke_color' => 'none',
+                'stroke_dash'  => 'none'
+            )
+        );
     }
 
     function test_drawRect()

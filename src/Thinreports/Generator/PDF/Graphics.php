@@ -60,6 +60,10 @@ class Graphics
     {
         $style = $this->buildGraphicStyles($attrs);
 
+        if ($style['stroke'] === null) {
+            return;
+        }
+
         $this->pdf->Line($x1, $y1, $x2, $y2, $style['stroke']);
     }
 
@@ -181,7 +185,7 @@ class Graphics
      */
     public function buildGraphicStyles(array $attrs)
     {
-        if (empty($attrs['stroke_width'])) {
+        if (empty($attrs['stroke_width']) || $attrs['stroke_color'] == 'none') {
             $stroke_style = null;
         } else {
             $stroke_color = ColorParser::parse($attrs['stroke_color']);
