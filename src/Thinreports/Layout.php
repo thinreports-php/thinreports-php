@@ -17,7 +17,7 @@ class Layout
 {
     const FILE_EXT_NAME = 'tlf';
     const COMPATIBLE_VERSION_RANGE_START = '>= 0.8.2';
-    const COMPATIBLE_VERSION_RANGE_END   = '< 1.0.0';
+    const COMPATIBLE_VERSION_RANGE_END   = '< 0.9.0';
 
     /**
      * @param string $filename
