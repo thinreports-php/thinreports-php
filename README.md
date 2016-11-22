@@ -4,7 +4,6 @@
 [![Latest Unstable Version](https://poser.pugx.org/thinreports-php/thinreports-php/v/unstable)](//packagist.org/packages/thinreports-php/thinreports-php)
 [![Build Status](https://travis-ci.org/thinreports-php/thinreports-php.svg)](https://travis-ci.org/thinreports-php/thinreports-php)
 [![Code Climate](https://codeclimate.com/github/thinreports-php/thinreports-php/badges/gpa.svg)](https://codeclimate.com/github/thinreports-php/thinreports-php)
-[![Coverage Status](https://coveralls.io/repos/thinreports-php/thinreports-php/badge.svg?branch=master)](https://coveralls.io/r/thinreports-php/thinreports-php?branch=master)
 
 ---
 
