@@ -1,3 +1,10 @@
+## 0.8.1
+
+Bugfix release.
+
+  * Fix stroke and fill is not drawn correctly #18 @hidakatsuya @mikkame
+  * 0.8.x never supports `.tlf` generated with Thinreports Editor 0.9+ #19 @hidakatsuya
+
 ## 0.8.0
 
 This is the FIRST major release, and includes the following change:

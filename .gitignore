@@ -1,4 +1,3 @@
 *.pdf
 composer.lock
 vendor/
-build/
