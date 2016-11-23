@@ -35,12 +35,12 @@ class ColorParser
 
     /**
      * @param string $hex_or_name
-     * @return string[]
+     * @return string[]|null
      */
     static public function parse($hex_or_name)
     {
-        if (empty($hex_or_name)) {
-            return array();
+        if ($hex_or_name === null || $hex_or_name == '') {
+            return null;
         }
 
         if (array_key_exists($hex_or_name, self::$color_names)) {

@@ -17,8 +17,8 @@ class ColorParserTest extends TestCase
     function colorPatternProvider()
     {
         return array(
-            array(array(), ''),
-            array(array(), null),
+            array(null, ''),
+            array(null, null),
             array(array(0, 0, 0), '#000000'),
             array(array(0, 0, 0), '000000'),
             array(array(199, 184, 55), '#c7b837'),
