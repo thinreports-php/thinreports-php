@@ -284,7 +284,7 @@ class GraphicsTest extends TestCase
                 array(
                     'stroke' => array(
                         'width' => '1',
-                        'color' => array(),
+                        'color' => null,
                         'dash' => 0
                     ),
                     'fill' => array(0, 0, 0)

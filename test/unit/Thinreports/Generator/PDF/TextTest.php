@@ -277,7 +277,7 @@ class TextTest extends TestCase
                 'font_size' => '18',
                 'font_family' => 'Helvetica',
                 'font_style' => '',
-                'color' => array(),
+                'color' => null,
                 'align' => 'L',
                 'valign' => 'T',
                 'line_height' => 1,
