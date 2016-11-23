@@ -44,7 +44,7 @@ Please see the following pages for further details.
 
 ## Compatibility with Thinreports
 
-  * Thinreports Editor >= 0.8
+  * Thinreports Editor >= 0.8 and < 0.9
 
 ## Quick Start
 
@@ -95,6 +95,13 @@ $page->setItemValues(array(
 $page = $report->addPage();
 $page->item('world_image')->setSource('/path/to/world.png');
 
+// 6th page: Using other .tlf file
+$page = $report->addPage('hello_php.tlf')
+$page->item('world')->setValue('php');
+
+// 7th page: Insert a blank page
+$report->addBlankPage();
+
 $report->generate('hello_world.pdf');
 
 // You can get content of the PDF in the following code:
@@ -104,6 +111,10 @@ $pdf_data = $report->generate();
 **NOTE:**
 If you want to render multi-byte characters such as "日本語",
 you need to configure the IPAFont to font-family property of the Text-block in the Editor.
+
+## Development Community
+
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports-php/thinreports-php/dev)
 
 ## Features
 
@@ -122,10 +133,6 @@ for currently available features.
 ### Other Tasks
 
   * Memory Usage Optimization - Disposing raw base64-data after generating a image file
-
-## Development Community
-
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/thinreports-php/thinreports-php/dev)
 
 ## License
 
