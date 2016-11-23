@@ -34,7 +34,7 @@ class LayoutTest extends TestCase
         }
 
         try {
-            Layout::parse('{"version":"1.0.0"}');
+            Layout::parse('{"version":"0.9.0"}');
             $this->fail();
         } catch (Exception\IncompatibleLayout $e) {
             // OK
