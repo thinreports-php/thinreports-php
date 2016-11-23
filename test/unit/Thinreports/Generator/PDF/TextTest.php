@@ -132,7 +132,7 @@ class TextTest extends TestCase
     /**
      * @dataProvider boxAttributesProvider
      */
-    function test_buildTextBoxStyles($box_attrs, $expected_styles)
+    function test_buildTextBoxStyles($expected_styles, $box_attrs)
     {
         $test_text = new Text($this->tcpdf);
         $this->assertEquals(
@@ -143,12 +143,6 @@ class TextTest extends TestCase
     function boxAttributesProvider()
     {
         $correct_text_attrs = array(
-            'attrs' => array(
-                'font_style' => array(),
-                'font_size' => '18',
-                'font_family' => 'Helvetica',
-                'color' => 'none'
-            ),
             'result' => array(
                 'font_size' => '18',
                 'font_family' => 'Helvetica',
@@ -158,91 +152,97 @@ class TextTest extends TestCase
                 'valign' => 'T',
                 'line_height' => 1,
                 'letter_spacing' => 0
+            ),
+            'attrs' => array(
+                'font_style' => array(),
+                'font_size' => '18',
+                'font_family' => 'Helvetica',
+                'color' => 'none'
             )
         );
 
         $case_single_row_is_true = array(
-            array_merge($correct_text_attrs['attrs'], array(
-                'single_row' => true,
-                'line_height' => '20',
-                'overflow' => 'truncate',
-            )),
             array_merge($correct_text_attrs['result'], array(
                 'line_height' => 1,
                 'overflow' => array(
                     'fit_cell' => false,
                     'max_height' => 100
                 )
+            )),
+            array_merge($correct_text_attrs['attrs'], array(
+                'single_row' => true,
+                'line_height' => '20',
+                'overflow' => 'truncate',
             ))
         );
 
         $case_single_row_is_omitted = array(
-            array_merge($correct_text_attrs['attrs'], array(
-                'line_height' => '999',
-                'overflow' => 'truncate'
-            )),
             array_merge($correct_text_attrs['result'], array(
                 'line_height' => '999',
                 'overflow' => array(
                     'fit_cell' => false,
                     'max_height' => 100
                 )
+            )),
+            array_merge($correct_text_attrs['attrs'], array(
+                'line_height' => '999',
+                'overflow' => 'truncate'
             ))
         );
 
         $case_single_row_is_false = array(
+            array_merge($correct_text_attrs['result'], array(
+                'line_height' => '999',
+                'overflow' => array(
+                    'fit_cell' => false,
+                    'max_height' => 100
+                )
+            )),
             array_merge($correct_text_attrs['attrs'], array(
                 'single_row' => false,
                 'line_height' => '999',
                 'overflow' => 'truncate'
-            )),
-            array_merge($correct_text_attrs['result'], array(
-                'line_height' => '999',
-                'overflow' => array(
-                    'fit_cell' => false,
-                    'max_height' => 100
-                )
             ))
         );
 
         $case_overflow_is_omitted = array(
-            array_merge($correct_text_attrs['attrs'], array(
-                'single_row' => true,
-                'line_height' => '20'
-            )),
             array_merge($correct_text_attrs['result'], array(
                 'overflow' => array(
                     'fit_cell' => false,
                     'max_height' => 100
                 )
+            )),
+            array_merge($correct_text_attrs['attrs'], array(
+                'single_row' => true,
+                'line_height' => '20'
             ))
         );
 
         $case_overflow_is_fit = array(
-            array_merge($correct_text_attrs['attrs'], array(
-                'overflow' => 'fit',
-                'single_row' => true,
-                'line_height' => '20'
-            )),
             array_merge($correct_text_attrs['result'], array(
                 'overflow' => array(
                     'fit_cell' => true,
                     'max_height' => 100
                 )
+            )),
+            array_merge($correct_text_attrs['attrs'], array(
+                'overflow' => 'fit',
+                'single_row' => true,
+                'line_height' => '20'
             ))
         );
 
         $case_overflow_is_expand = array(
-            array_merge($correct_text_attrs['attrs'], array(
-                'overflow' => 'expand',
-                'single_row' => true,
-                'line_height' => '20'
-            )),
             array_merge($correct_text_attrs['result'], array(
                 'overflow' => array(
                     'fit_cell' => false,
                     'max_height' => 0
                 )
+            )),
+            array_merge($correct_text_attrs['attrs'], array(
+                'overflow' => 'expand',
+                'single_row' => true,
+                'line_height' => '20'
             ))
         );
 
@@ -259,7 +259,7 @@ class TextTest extends TestCase
     /**
      * @dataProvider textAttributesProvider
      */
-    function test_buildTextStyles($text_attrs, $expected_styles)
+    function test_buildTextStyles($expected_styles, $text_attrs)
     {
         $test_text = new Text($this->tcpdf);
         $this->assertSame($expected_styles, $test_text->buildTextStyles($text_attrs));
@@ -267,12 +267,6 @@ class TextTest extends TestCase
     function textAttributesProvider()
     {
         $case1 = array(
-            array(
-                'font_style' => array(),
-                'font_size' => '18',
-                'font_family' => 'Helvetica',
-                'color' => ''
-            ),
             array(
                 'font_size' => '18',
                 'font_family' => 'Helvetica',
@@ -282,20 +276,16 @@ class TextTest extends TestCase
                 'valign' => 'T',
                 'line_height' => 1,
                 'letter_spacing' => 0
+            ),
+            array(
+                'font_style' => array(),
+                'font_size' => '18',
+                'font_family' => 'Helvetica',
+                'color' => ''
             )
         );
 
         $case2 = array(
-            array(
-                'font_style' => array('bold', 'italic', 'underline', 'strikethrough'),
-                'font_size' => '18',
-                'font_family' => 'Helvetica',
-                'color' => '#000000',
-                'align' => 'right',
-                'valign' => 'bottom',
-                'line_height' => 1.5,
-                'letter_spacing' => 10
-            ),
             array(
                 'font_size' => '18',
                 'font_family' => 'Helvetica',
@@ -303,6 +293,16 @@ class TextTest extends TestCase
                 'color' => array(0, 0, 0),
                 'align' => 'R',
                 'valign' => 'B',
+                'line_height' => 1.5,
+                'letter_spacing' => 10
+            ),
+            array(
+                'font_style' => array('bold', 'italic', 'underline', 'strikethrough'),
+                'font_size' => '18',
+                'font_family' => 'Helvetica',
+                'color' => '#000000',
+                'align' => 'right',
+                'valign' => 'bottom',
                 'line_height' => 1.5,
                 'letter_spacing' => 10
             )
