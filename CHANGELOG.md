@@ -1,3 +1,7 @@
+## master
+
+ * [Support v0.9 format schema](https://github.com/thinreports-php/thinreports-php/projects/1)
+
 ## 0.8.1
 
 Bugfix release.
