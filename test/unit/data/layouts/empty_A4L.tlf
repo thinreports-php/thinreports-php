@@ -1,1 +1,19 @@
-{"version":"0.8.2","config":{"title":"","option":{},"page":{"paper-type":"A4","orientation":"landscape","margin-top":"20","margin-bottom":"20","margin-left":"20","margin-right":"20"}},"svg":"<svg width=\"841.8\" height=\"595.2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" preserveAspectRatio=\"none\" viewBox=\"0 0 841.8 595.2\"><g class=\"canvas\"/></svg>","state":{"layout-guide":[]}}
+{
+  "version": "0.9.0",
+  "title": "",
+  "report": {
+    "paper-type": "A4",
+    "width": 0.0,
+    "height": 0.0,
+    "orientation": "landscape",
+    "margin": [
+      20.0,
+      20.0,
+      20.0,
+      20.0
+    ]
+  },
+  "items": [
+
+  ]
+}
