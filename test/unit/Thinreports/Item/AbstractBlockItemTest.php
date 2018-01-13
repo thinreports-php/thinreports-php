@@ -14,17 +14,15 @@ class AbstractBlockItemTest extends TestCase
     {
         $report = new Report($this->dataLayoutFile('empty_A4P.tlf'));
         $parent = $report->addPage();
-        $format = array(
+        $schema = array(
             'type' => 'test-block',
-            'display' => 'true',
-            'box' => array(
-                'x' => 100,
-                'y' => 100,
-                'width' => 100,
-                'height' => 100
-            )
+            'display' => true,
+            'x' => 100,
+            'y' => 100,
+            'width' => 100,
+            'height' => 100
         );
-        $this->test_item = new TestBlockItem($parent, $format);
+        $this->test_item = new TestBlockItem($parent, $schema);
     }
 
     function test_setValue()
@@ -86,5 +84,6 @@ class AbstractBlockItemTest extends TestCase
     function test_isTypeOf()
     {
         $this->assertTrue($this->test_item->isTypeOf('block'));
+        $this->assertTrue($this->test_item->isTypeOf('test-block'));
     }
 }
