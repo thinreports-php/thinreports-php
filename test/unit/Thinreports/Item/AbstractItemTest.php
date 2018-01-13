@@ -37,10 +37,10 @@ class AbstractItemTest extends TestCase
 
     function test_initialize()
     {
-        $item = new TestItem($this->page, array('display' => 'true'));
+        $item = new TestItem($this->page, array('display' => true));
         $this->assertTrue($item->isVisible());
 
-        $item = new TestItem($this->page, array('display' => 'false'));
+        $item = new TestItem($this->page, array('display' => false));
         $this->assertFalse($item->isVisible());
     }
 
@@ -51,9 +51,9 @@ class AbstractItemTest extends TestCase
      *      AbstractItem::show
      *      AbstractItem::hide
      */
-    function test_isVisible()
+    function test_methods_for_visibility()
     {
-        $item = new TestItem($this->page, array('display' => 'true'));
+        $item = new TestItem($this->page, array('display' => true));
 
         $item->setVisible(false);
         $this->assertFalse($item->isVisible());
@@ -103,34 +103,25 @@ class AbstractItemTest extends TestCase
 
     function test_getParent()
     {
-        $item = new TestItem($this->page, array('display' => 'true'));
+        $item = new TestItem($this->page, array('display' => true));
         $this->assertSame($this->page, $item->getParent());
     }
 
-    function test_getFormat()
+    function test_getSchema()
     {
-        $item = new TestItem($this->page, array('display' => 'true'));
-        $this->assertSame(array('display' => 'true'), $item->getFormat());
+        $schema = array('display' => true);
+        $item = new TestItem($this->page, $schema);
+        $this->assertSame($schema, $item->getSchema());
     }
 
-    /**
-     * Tests for:
-     *      AbstractItem::getId
-     *      AbstractItem::getType
-     *      AbstractItem::getSVGAttributes
-     */
-    function test_getters_for_Item_attribute()
+    function test_getId()
     {
         $item = new TestItem($this->page, array(
-            'display' => 'true',
-            'id' => 'foo_id',
-            'type' => 'foo_type',
-            'svg' => array('attrs' => array('attr' => 'value'))
+            'display' => true,
+            'id' => 'foo_id'
         ));
 
         $this->assertEquals('foo_id', $item->getId());
-        $this->assertEquals('foo_type', $item->getType());
-        $this->assertEquals(array('attr' => 'value'), $item->getSVGAttributes());
     }
 
     function test_isTypeOf()

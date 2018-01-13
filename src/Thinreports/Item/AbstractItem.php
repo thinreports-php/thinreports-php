@@ -14,20 +14,20 @@ use Thinreports\Page\Page;
 abstract class AbstractItem
 {
     protected $parent;
-    protected $format;
+    protected $schema;
 
     protected $is_visible;
     protected $style;
 
     /**
      * @param Page $parent
-     * @param array $format
+     * @param array $schema
      */
-    public function __construct(Page $parent, array $format)
+    public function __construct(Page $parent, array $schema)
     {
         $this->parent = $parent;
-        $this->format = $format;
-        $this->is_visible = $format['display'] === 'true';
+        $this->schema = $schema;
+        $this->is_visible = $schema['display'] === true;
     }
 
     /**
@@ -71,7 +71,7 @@ abstract class AbstractItem
      */
     public function getId()
     {
-        return $this->format['id'];
+        return $this->schema['id'];
     }
 
     /**
@@ -140,19 +140,9 @@ abstract class AbstractItem
      *
      * @return array
      */
-    public function getFormat()
+    public function getSchema()
     {
-        return $this->format;
-    }
-
-    /**
-     * @access private
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->format['type'];
+        return $this->schema;
     }
 
     /**
@@ -163,17 +153,7 @@ abstract class AbstractItem
      */
     public function isTypeOf($type_name)
     {
-        return $this->getType() === $type_name;
-    }
-
-    /**
-     * @access private
-     *
-     * @return array
-     */
-    public function getSVGAttributes()
-    {
-        return $this->format['svg']['attrs'];
+        return $this->schema['type'] === $type_name;
     }
 
     /**
