@@ -15,9 +15,9 @@ class BasicItemTest extends TestCase
         $this->page = $report->addPage();
     }
 
-    private function newBasicItem($format_data_name)
+    private function newBasicItem($schema_data_name)
     {
-        return new BasicItem($this->page, $this->dataItemFormat($format_data_name));
+        return new BasicItem($this->page, $this->dataItemFormat($schema_data_name));
     }
 
     function test_initialize()
@@ -30,8 +30,8 @@ class BasicItemTest extends TestCase
         $this->assertAttributeInstanceOf('Thinreports\Item\Style\TextStyle',
             'style', $item);
 
-        foreach (array('line', 'rect', 'ellipse') as $format_data_name) {
-            $item = $this->newBasicItem($format_data_name);
+        foreach (array('line', 'rect', 'ellipse') as $schema_data_name) {
+            $item = $this->newBasicItem($schema_data_name);
             $this->assertAttributeInstanceOf('Thinreports\Item\Style\GraphicStyle',
                 'style', $item);
         }
@@ -40,53 +40,53 @@ class BasicItemTest extends TestCase
     function test_getBounds()
     {
         $item = $this->newBasicItem('image');
-        $item_format = $this->dataItemFormat('image');
-        $attrs = $item_format['svg']['attrs'];
+        $item_schema = $this->dataItemFormat('image');
 
         $this->assertEquals(array(
-            'x'      => $attrs['x'],
-            'y'      => $attrs['y'],
-            'width'  => $attrs['width'],
-            'height' => $attrs['height']
+            'x' => $item_schema['x'],
+            'y' => $item_schema['y'],
+            'width' => $item_schema['width'],
+            'height' => $item_schema['height']
         ), $item->getBounds());
 
         $item = $this->newBasicItem('rect');
-        $item_format = $this->dataItemFormat('rect');
-        $attrs = $item_format['svg']['attrs'];
+        $item_schema = $this->dataItemFormat('rect');
 
         $this->assertEquals(array(
-            'x'      => $attrs['x'],
-            'y'      => $attrs['y'],
-            'width'  => $attrs['width'],
-            'height' => $attrs['height']
+            'x' => $item_schema['x'],
+            'y' => $item_schema['y'],
+            'width' => $item_schema['width'],
+            'height' => $item_schema['height']
         ), $item->getBounds());
 
         $item = $this->newBasicItem('text');
-        $item_format = $this->dataItemFormat('text');
-        $box = $item_format['box'];
-
-        $this->assertEquals($box, $item->getBounds());
-
-        $item = $this->newBasicItem('ellipse');
-        $item_format = $this->dataItemFormat('ellipse');
-        $attrs = $item_format['svg']['attrs'];
+        $item_schema = $this->dataItemFormat('text');
 
         $this->assertEquals(array(
-            'cx' => $attrs['cx'],
-            'cy' => $attrs['cy'],
-            'rx' => $attrs['rx'],
-            'ry' => $attrs['ry']
+            'x' => $item_schema['x'],
+            'y' => $item_schema['y'],
+            'width' => $item_schema['width'],
+            'height' => $item_schema['height']
+        ), $item->getBounds());
+
+        $item = $this->newBasicItem('ellipse');
+        $item_schema = $this->dataItemFormat('ellipse');
+
+        $this->assertEquals(array(
+            'cx' => $item_schema['cx'],
+            'cy' => $item_schema['cy'],
+            'rx' => $item_schema['rx'],
+            'ry' => $item_schema['ry']
         ), $item->getBounds());
 
         $item = $this->newBasicItem('line');
-        $item_format = $this->dataItemFormat('line');
-        $attrs = $item_format['svg']['attrs'];
+        $item_schema = $this->dataItemFormat('line');
 
         $this->assertEquals(array(
-            'x1' => $attrs['x1'],
-            'y1' => $attrs['y1'],
-            'x2' => $attrs['x2'],
-            'y2' => $attrs['y2']
+            'x1' => $item_schema['x1'],
+            'y1' => $item_schema['y1'],
+            'x2' => $item_schema['x2'],
+            'y2' => $item_schema['y2']
         ), $item->getBounds());
     }
 
@@ -95,7 +95,7 @@ class BasicItemTest extends TestCase
         $item = $this->newBasicItem('rect');
 
         $this->assertTrue($item->isTypeOf('basic'));
-        $this->assertTrue($item->isTypeOf('s-rect'));
+        $this->assertTrue($item->isTypeOf('rect'));
     }
 
     function test_isImage()
@@ -138,10 +138,10 @@ class BasicItemTest extends TestCase
         $this->assertFalseIn(array('rect', 'ellipse', 'image', 'text'), 'isLine');
     }
 
-    private function assertFalseIn($format_data_names, $method_name)
+    private function assertFalseIn($schema_data_names, $method_name)
     {
-        foreach ($format_data_names as $format_data_name) {
-            $item = $this->newBasicItem($format_data_name);
+        foreach ($schema_data_names as $schema_data_name) {
+            $item = $this->newBasicItem($schema_data_name);
             $this->assertFalse($item->$method_name());
         }
     }

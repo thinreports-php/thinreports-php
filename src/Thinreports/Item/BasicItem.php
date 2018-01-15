@@ -19,19 +19,19 @@ class BasicItem extends AbstractItem
     /**
      * {@inheritdoc}
      */
-    public function __construct(Page $parent, array $format)
+    public function __construct(Page $parent, array $schema)
     {
-        parent::__construct($parent, $format);
+        parent::__construct($parent, $schema);
 
         switch (true) {
             case $this->isImage():
-                $this->style = new Style\BasicStyle($format);
+                $this->style = new Style\BasicStyle($schema);
                 break;
             case $this->isText():
-                $this->style = new Style\TextStyle($format);
+                $this->style = new Style\TextStyle($schema);
                 break;
             default:
-                $this->style = new Style\GraphicStyle($format);
+                $this->style = new Style\GraphicStyle($schema);
                 break;
         }
     }
@@ -43,7 +43,7 @@ class BasicItem extends AbstractItem
      */
     public function isImage()
     {
-        return $this->isTypeOf('s-image');
+        return $this->isTypeOf('image');
     }
 
     /**
@@ -53,7 +53,7 @@ class BasicItem extends AbstractItem
      */
     public function isText()
     {
-        return $this->isTypeOf('s-text');
+        return $this->isTypeOf('text');
     }
 
     /**
@@ -63,7 +63,7 @@ class BasicItem extends AbstractItem
      */
     public function isRect()
     {
-        return $this->isTypeOf('s-rect');
+        return $this->isTypeOf('rect');
     }
 
     /**
@@ -73,7 +73,7 @@ class BasicItem extends AbstractItem
      */
     public function isEllipse()
     {
-        return $this->isTypeOf('s-ellipse');
+        return $this->isTypeOf('ellipse');
     }
 
     /**
@@ -83,7 +83,7 @@ class BasicItem extends AbstractItem
      */
     public function isLine()
     {
-        return $this->isTypeOf('s-line');
+        return $this->isTypeOf('line');
     }
 
     /**
@@ -99,34 +99,31 @@ class BasicItem extends AbstractItem
      */
     public function getBounds()
     {
-        $svg_attrs = $this->getSVGAttributes();
+        $schema = $this->schema;
 
         switch (true) {
-            case $this->isImage() || $this->isRect():
+            case $this->isImage() || $this->isRect() || $this->isText():
                 return array(
-                    'x'      => $svg_attrs['x'],
-                    'y'      => $svg_attrs['y'],
-                    'width'  => $svg_attrs['width'],
-                    'height' => $svg_attrs['height']
+                    'x' => $schema['x'],
+                    'y' => $schema['y'],
+                    'width' => $schema['width'],
+                    'height' => $schema['height']
                 );
-                break;
-            case $this->isText():
-                return $this->format['box'];
                 break;
             case $this->isEllipse():
                 return array(
-                    'cx' => $svg_attrs['cx'],
-                    'cy' => $svg_attrs['cy'],
-                    'rx' => $svg_attrs['rx'],
-                    'ry' => $svg_attrs['ry']
+                    'cx' => $schema['cx'],
+                    'cy' => $schema['cy'],
+                    'rx' => $schema['rx'],
+                    'ry' => $schema['ry']
                 );
                 break;
             case $this->isLine():
                 return array(
-                    'x1' => $svg_attrs['x1'],
-                    'y1' => $svg_attrs['y1'],
-                    'x2' => $svg_attrs['x2'],
-                    'y2' => $svg_attrs['y2']
+                    'x1' => $schema['x1'],
+                    'y1' => $schema['y1'],
+                    'x2' => $schema['x2'],
+                    'y2' => $schema['y2']
                 );
                 break;
         }
