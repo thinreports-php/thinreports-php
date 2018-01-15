@@ -16,8 +16,8 @@ class ImageBlockItemTest extends TestCase
 
     private function newImageBlock()
     {
-        $format = $this->dataItemFormat('image_block', 'default');
-        return new ImageBlockItem($this->page, $format);
+        $schema = $this->dataItemFormat('image_block', 'default');
+        return new ImageBlockItem($this->page, $schema);
     }
 
     function test_initialize()
@@ -42,5 +42,12 @@ class ImageBlockItemTest extends TestCase
 
         $test_item->setValue('/path/to/image.png');
         $this->assertEquals('/path/to/image.png', $test_item->getSource());
+    }
+
+    function test_isTypeOf()
+    {
+        $test_item = $this->newImageBlock();
+        $this->assertTrue($test_item->isTypeOf('image-block'));
+        $this->assertFalse($test_item->isTypeOf('rect'));
     }
 }
