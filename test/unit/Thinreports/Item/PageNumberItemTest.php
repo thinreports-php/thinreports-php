@@ -18,19 +18,8 @@ class PageNumberItemTest extends TestCase
 
     private function newPageNumber($data_format_key)
     {
-        $format = $this->dataItemFormat('page_number', $data_format_key);
-        return new PageNumberItem($this->page, $format);
-    }
-
-    function test_generateUniqueId()
-    {
-        $id = PageNumberItem::generateUniqueId();
-
-        $this->assertTrue(preg_match('/^__page_no_(\d+?)__$/', $id, $matches) === 1);
-
-        $id = PageNumberItem::generateUniqueId();
-
-        $this->assertEquals('__page_no_' . ($matches[1] + 1) . '__', $id);
+        $schema = $this->dataItemFormat('page_number', $data_format_key);
+        return new PageNumberItem($this->page, $schema);
     }
 
     function test_initialize()
@@ -40,6 +29,7 @@ class PageNumberItemTest extends TestCase
         $this->assertAttributeInstanceOf('Thinreports\Item\Style\TextStyle',
             'style', $test_item);
         $this->assertAttributeEquals('{page}', 'number_format', $test_item);
+        $this->assertAttributeEquals(true, 'is_dynamic', $test_item);
     }
 
     function test_setNumberFormat()
@@ -78,7 +68,7 @@ class PageNumberItemTest extends TestCase
 
         $this->assertSame('', $test_item->getFormattedPageNumber());
 
-        $test_item = $this->newPageNumber('with_for_list');
+        $test_item = $this->newPageNumber('target_list');
 
         $this->assertSame('', $test_item->getFormattedPageNumber());
 
@@ -96,7 +86,10 @@ class PageNumberItemTest extends TestCase
         $test_item = $this->newPageNumber('default');
         $this->assertTrue($test_item->isForReport());
 
-        $test_item = $this->newPageNumber('with_for_list');
+        $test_item = $this->newPageNumber('target_blank');
+        $this->assertTrue($test_item->isForReport());
+
+        $test_item = $this->newPageNumber('target_list');
         $this->assertFalse($test_item->isForReport());
     }
 

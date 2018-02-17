@@ -14,31 +14,22 @@ use Thinreports\Item\Style\TextStyle;
 
 class PageNumberItem extends AbstractItem
 {
-    const TYPE_NAME = 's-pageno';
-
-    static protected $serial_number = 1;
+    const TYPE_NAME = 'page-number';
 
     private $number_format;
 
     /**
-     * @access private
-     *
-     * @return string
-     */
-    static public function generateUniqueId()
-    {
-        return '__page_no_' . self::$serial_number++ . '__';
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function __construct(Page $parent, array $format)
+    public function __construct(Page $parent, array $schema)
     {
-        parent::__construct($parent, $format);
+        parent::__construct($parent, $schema);
 
-        $this->style = new TextStyle($format);
-        $this->number_format = $this->format['format'];
+        # PageNumberItem is Always dynamically item
+        $this->is_dynamic = true;
+
+        $this->style = new TextStyle($schema);
+        $this->number_format = $this->schema['format'];
     }
 
     /**
@@ -56,7 +47,7 @@ class PageNumberItem extends AbstractItem
      */
     public function resetNumberFormat()
     {
-        $this->setNumberFormat($this->format['format']);
+        $this->setNumberFormat($this->schema['format']);
         return $this;
     }
 
@@ -75,18 +66,24 @@ class PageNumberItem extends AbstractItem
      */
     public function getFormattedPageNumber()
     {
-        $format = $this->getNumberFormat();
-
-        if ($format === '' || !$this->isForReport()) {
+        if (!$this->isForReport()) {
             return '';
         }
 
-        $page   = $this->getParent();
+        $format = $this->getNumberFormat();
+
+        if ($format === '') {
+            return '';
+        }
+
+        $page = $this->getParent();
         $report = $page->getReport();
 
-        return str_replace(array('{page}', '{total}'),
-                           array($page->getNo(), $report->getLastPageNumber()),
-                           $format);
+        return str_replace(
+            array('{page}', '{total}'),
+            array($page->getNo(), $report->getLastPageNumber()),
+            $format
+        );
     }
 
     /**
@@ -96,7 +93,7 @@ class PageNumberItem extends AbstractItem
      */
     public function isForReport()
     {
-        return empty($this->format['target']);
+        return $this->schema['target'] === '' || $this->schema['target'] === 'report';
     }
 
     /**
@@ -104,6 +101,11 @@ class PageNumberItem extends AbstractItem
      */
     public function getBounds()
     {
-        return $this->format['box'];
+        return array(
+            'x' => $this->schema['x'],
+            'y' => $this->schema['y'],
+            'width' => $this->schema['width'],
+            'height' => $this->schema['height']
+        );
     }
 }
