@@ -75,13 +75,13 @@ class AbstractItemTest extends TestCase
         $item = new TestGraphicsItem($this->page, $this->dataItemFormat('rect'));
 
         $item->setStyle('fill_color', 'red');
-        $this->assertEquals('red', $item->getStyle('fill_color'));
+        $this->assertEquals('red', $item->style->get_fill_color());
     }
 
     function test_getStyle()
     {
         $item = new TestGraphicsItem($this->page, $this->dataItemFormat('rect'));
-        $this->assertEquals('#ffffff', $item->style->get_fill_color());
+        $this->assertEquals('#ffffff', $item->getStyle('fill_color'));
     }
 
     function test_setStyles()
@@ -136,7 +136,7 @@ class AbstractItemTest extends TestCase
     function test_isTypeOf()
     {
         $item = new TestItem($this->page, array(
-            'display' => 'true',
+            'display' => true,
             'type' => 'foo_type'
         ));
         $this->assertTrue($item->isTypeOf('foo_type'));
