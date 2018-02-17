@@ -107,6 +107,15 @@ class AbstractItemTest extends TestCase
         $this->assertSame($this->page, $item->getParent());
     }
 
+    function test_getIsDynamic()
+    {
+        $item = new TestItem($this->page, array('id' => '', 'display' => true));
+        $this->assertFalse($item->isDynamic());
+
+        $item = new TestItem($this->page, array('id' => 'foo', 'display' => true));
+        $this->assertTrue($item->isDynamic());
+    }
+
     function test_getSchema()
     {
         $schema = array('display' => true);
