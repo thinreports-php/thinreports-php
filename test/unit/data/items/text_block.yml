@@ -1,41 +1,36 @@
 ---
 default: &default
-  type: s-tblock
   id: text_block_default
+  type: text-block
   value: ""
-  ref-id: ""
-  display: "true"
-  multiple: "false"
-  line-height: ""
-  line-height-ratio: ""
-  valign: top
-  overflow: truncate
-  word-wrap: break-word
-  box:
-    x: 100
-    y: 100
-    width: 100
-    height: 100
+  reference-id: ""
+  x: 100
+  y: 100
+  width: 100
+  height: 100
+  display: true
+  value: ""
+  multiple-line: false
   format:
     base: ""
     type: ""
-  svg:
-    tag: text
-    attrs:
-      kerning: auto
-      letter-spacing: normal
-      fill: "#000000"
-      font-size: 18
-      font-family: Helvetica
-      font-weight: normal
-      font-style: normal
-      text-anchor: start
-      text-decoration: none
+  style:
+    font-family: Helvetica
+    font-size: 18
+    color: #000000
+    font-style: ""
+    text-align: left
+    vertical-align: top
+    line-height: ""
+    line-height-ratio: ""
+    letter-spacing: ""
+    overflow: truncate
+    word-wrap: break-word
 
 with_multiple:
   <<: *default
   id: text_block_multiple
-  multiple: "true"
+  multiple-line: true
 
 with_default_value:
   <<: *default
@@ -62,9 +57,9 @@ with_base_formatting:
 with_reference_to_default:
   <<: *default
   id: text_block_reference_to_default
-  ref-id: text_block_default
+  reference-id: text_block_default
 
 with_reference_to_formatting:
   <<: *default
   id: text_block_reference_to_number_formatting
-  ref-id: text_block_number_formatting
+  reference-id: text_block_number_formatting

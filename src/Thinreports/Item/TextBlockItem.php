@@ -16,7 +16,7 @@ use Thinreports\Exception;
 
 class TextBlockItem extends AbstractBlockItem
 {
-    const TYPE_NAME = 's-tblock';
+    const TYPE_NAME = 'text-block';
 
     private $format_enabled = null;
     private $reference_item = null;
@@ -25,19 +25,19 @@ class TextBlockItem extends AbstractBlockItem
     /**
      * {@inheritdoc}
      */
-    public function __construct(Page $parent, array $format)
+    public function __construct(Page $parent, array $schema)
     {
-        parent::__construct($parent, $format);
+        parent::__construct($parent, $schema);
 
-        $this->style = new TextStyle($format);
-        $this->formatter = new TextFormatter($format['format']);
+        $this->style = new TextStyle($schema);
+        $this->formatter = new TextFormatter($schema['format']);
 
         $this->format_enabled = $this->hasFormatSettings();
 
-        parent::setValue($format['value']);
+        parent::setValue($schema['value']);
 
         if ($this->hasReference()) {
-            $this->reference_item = $parent->item($format['ref-id']);
+            $this->reference_item = $parent->item($schema['reference-id']);
         }
     }
 
@@ -117,7 +117,7 @@ class TextBlockItem extends AbstractBlockItem
      */
     public function isMultiple()
     {
-        return $this->format['multiple'] === 'true';
+        return $this->schema['multiple-line'] === true;
     }
 
     /**
@@ -127,7 +127,7 @@ class TextBlockItem extends AbstractBlockItem
      */
     public function hasFormatSettings()
     {
-        $text_format = $this->format['format'];
+        $text_format = $this->schema['format'];
         return $text_format['type'] !== '' || $text_format['base'] !== '';
     }
 
@@ -138,6 +138,6 @@ class TextBlockItem extends AbstractBlockItem
      */
     public function hasReference()
     {
-        return $this->format['ref-id'] !== '';
+        return $this->schema['reference-id'] !== '';
     }
 }
