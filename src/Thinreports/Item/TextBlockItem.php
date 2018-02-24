@@ -29,7 +29,7 @@ class TextBlockItem extends AbstractBlockItem
     {
         parent::__construct($parent, $schema);
 
-        $this->style = new TextStyle($schema);
+        $this->style = new TextStyle($schema['style']);
         $this->formatter = new TextFormatter($schema['format']);
 
         $this->format_enabled = $this->hasFormatSettings();

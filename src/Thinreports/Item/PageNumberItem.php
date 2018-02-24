@@ -28,7 +28,7 @@ class PageNumberItem extends AbstractItem
         # PageNumberItem is Always dynamically item
         $this->is_dynamic = true;
 
-        $this->style = new TextStyle($schema);
+        $this->style = new TextStyle($schema['style']);
         $this->number_format = $this->schema['format'];
     }
 

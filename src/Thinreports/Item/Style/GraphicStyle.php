@@ -22,22 +22,19 @@ class GraphicStyle extends BasicStyle
     );
 
     /**
-     * @param float|string $width
+     * @param float|integer $width
      */
     public function set_border_width($width)
     {
-        if ((float) $width > 0) {
-            $this->styles['stroke-opacity'] = '1';
-        }
-        $this->styles['stroke-width'] = $width;
+        $this->styles['border-width'] = $width;
     }
 
     /**
-     * @return float|string
+     * @return float|integer
      */
     public function get_border_width()
     {
-        return $this->readStyle('stroke-width');
+        return $this->readStyle('border-width');
     }
 
     /**
@@ -45,7 +42,7 @@ class GraphicStyle extends BasicStyle
      */
     public function set_border_color($color)
     {
-        $this->styles['stroke'] = $color;
+        $this->styles['border-color'] = $color;
     }
 
     /**
@@ -53,7 +50,7 @@ class GraphicStyle extends BasicStyle
      */
     public function get_border_color()
     {
-        return $this->readStyle('stroke');
+        return $this->readStyle('border-color');
     }
 
     /**
@@ -80,7 +77,7 @@ class GraphicStyle extends BasicStyle
      */
     public function set_fill_color($color)
     {
-        $this->styles['fill'] = $color;
+        $this->styles['fill-color'] = $color;
     }
 
     /**
@@ -88,6 +85,6 @@ class GraphicStyle extends BasicStyle
      */
     public function get_fill_color()
     {
-        return $this->readStyle('fill');
+        return $this->readStyle('fill-color');
     }
 }
