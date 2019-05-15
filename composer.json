@@ -1,5 +1,5 @@
 {
-  "name": "thinreports-php/thinreports-php",
+  "name": "Sotatek-NgocBach/thinreports-php",
   "description": "An implementation of Thinreports Generator in PHP. It provides easy and simple way for generating a PDF on pure PHP",
   "homepage": "https://github.com/thinreports-php",
   "type": "library",
