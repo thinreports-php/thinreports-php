@@ -1,21 +1,19 @@
 ---
 default: &default
-  type: s-rect
+  type: rect
   id: rect_default
-  display: "true"
-  svg:
-    tag: rect
-    attrs:
-      stroke-width: "1"
-      stroke-dasharray: none
-      fill: "#ffffff"
-      fill-opacity: "1"
-      rx: "0"
-      x: "100"
-      y: "100"
-      width: "100"
-      height: "100"
+  display: true
+  x: 100
+  y: 100
+  width: 100
+  height: 100
+  border-radius: 0
+  style:
+    border-width: 1
+    border-color: #000000
+    border-style: solid
+    fill-color: #ffffff
 
 hidden:
   <<: *default
-  display: "false"
+  display: false

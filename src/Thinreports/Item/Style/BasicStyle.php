@@ -17,14 +17,15 @@ use Thinreports\Exception;
 class BasicStyle
 {
     static protected $available_style_names = array();
-    protected $styles = array();
+
+    protected $styles;
 
     /**
-     * @param array $item_format
+     * @param array $item_styles
      */
-    public function __construct(array $item_format)
+    public function __construct(array $item_styles)
     {
-        $this->initializeStyles($item_format);
+        $this->styles = $item_styles;
     }
 
     /**
@@ -94,13 +95,5 @@ class BasicStyle
         if (!in_array($value, $allows, true)) {
             throw new Exception\UnavailableStyleValue($style_name, $value, $allows);
         }
-    }
-
-    /**
-     * @param array $item_format
-     */
-    protected function initializeStyles(array $item_format)
-    {
-        $this->styles = $item_format['svg']['attrs'] ?: array();
     }
 }

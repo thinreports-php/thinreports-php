@@ -26,14 +26,7 @@ class BasicStyleTest extends TestCase
 
     function setup()
     {
-        $item_format = array(
-            'svg' => array(
-                'attrs' => array(
-                    'style_a' => 'style_a_value',
-                )
-            )
-        );
-        $this->test_style = new TestStyle($item_format);
+        $this->test_style = new TestStyle(array('style_a' => 'style_a_value'));
     }
 
     function test_initialize()

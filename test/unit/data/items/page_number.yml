@@ -1,32 +1,27 @@
 ---
 default: &default
-  type: s-pageno
-  id: __page_no_1__
-  display: "true"
-  box:
-    x: 100
-    y: 100
-    width: 100
-    height: 100
+  type: page-number
+  id: ""
+  x: 100
+  y: 100
+  width: 100
+  height: 100
   format: "{page}"
-  overflow: truncate
-  target: ""
-  svg:
-    tag: text
-    attrs:
-      x: "200"
-      y: "200"
-      kerning: auto
-      letter-spacing: normal
-      fill: "#000000"
-      font-size: "18"
-      font-family: Helvetica
-      font-weight: normal
-      font-style: normal
-      text-anchor: middle
-      text-decoration: none
+  target: report
+  display: true
+  style:
+    font-family: Helvetica
+    font-size: 18
+    color: #000000
+    font-style: []
+    text-align: left
+    letter-spacing: ""
+    overflow: truncate
 
-with_for_list:
+target_blank:
   <<: *default
-  id: __page_no_2__
+  target: ""
+
+target_list:
+  <<: *default
   target: list

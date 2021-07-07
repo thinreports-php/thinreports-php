@@ -21,36 +21,12 @@ class TextStyle extends BasicStyle
         'align', 'valign', 'color', 'font_size'
     );
 
-    static private $text_alignments = array(
-        'left'   => 'start',
-        'center' => 'middle',
-        'right'  => 'end'
-    );
-
-    static private $vertical_alignments = array(
-        'top', 'center', 'bottom'
-    ) ;
-
-    private $vertical_align = 'top';
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function initializeStyles(array $item_format)
-    {
-        parent::initializeStyles($item_format);
-
-        if (!empty($item_format['valign'])) {
-            $this->vertical_align = $item_format['valign'];
-        }
-    }
-
     /**
      * @param string $color
      */
     public function set_color($color)
     {
-        $this->styles['fill'] = $color;
+        $this->styles['color'] = $color;
     }
 
     /**
@@ -58,11 +34,11 @@ class TextStyle extends BasicStyle
      */
     public function get_color()
     {
-        return $this->readStyle('fill');
+        return $this->readStyle('color');
     }
 
     /**
-     * @param float|string
+     * @param float|integer $size
      */
     public function set_font_size($size)
     {
@@ -70,7 +46,7 @@ class TextStyle extends BasicStyle
     }
 
     /**
-     * @return float|string
+     * @return float|integer
      */
     public function get_font_size()
     {
@@ -82,7 +58,7 @@ class TextStyle extends BasicStyle
      */
     public function set_bold($enable)
     {
-        $this->styles['font-weight'] = $enable ? 'bold' : 'normal';
+        $this->updateFontStyle('bold', $enable);
     }
 
     /**
@@ -90,7 +66,7 @@ class TextStyle extends BasicStyle
      */
     public function get_bold()
     {
-        return $this->readStyle('font-weight') === 'bold';
+        return $this->hasFontStyle('bold');
     }
 
     /**
@@ -98,7 +74,7 @@ class TextStyle extends BasicStyle
      */
     public function set_italic($enable)
     {
-        $this->styles['font-style'] = $enable ? 'italic' : 'normal';
+        $this->updateFontStyle('italic', $enable);
     }
 
     /**
@@ -106,7 +82,7 @@ class TextStyle extends BasicStyle
      */
     public function get_italic()
     {
-        return $this->readStyle('font-style') === 'italic';
+        return $this->hasFontStyle('italic');
     }
 
     /**
@@ -114,7 +90,7 @@ class TextStyle extends BasicStyle
      */
     public function set_underline($enable)
     {
-        $this->setTextDecoration($enable, null);
+        $this->updateFontStyle('underline', $enable);
     }
 
     /**
@@ -122,7 +98,7 @@ class TextStyle extends BasicStyle
      */
     public function get_underline()
     {
-        return $this->hasTextDecoration('underline');
+        return $this->hasFontStyle('underline');
     }
 
     /**
@@ -130,7 +106,7 @@ class TextStyle extends BasicStyle
      */
     public function set_linethrough($enable)
     {
-        $this->setTextDecoration(null, $enable);
+        $this->updateFontStyle('linethrough', $enable);
     }
 
     /**
@@ -138,97 +114,85 @@ class TextStyle extends BasicStyle
      */
     public function get_linethrough()
     {
-        return $this->hasTextDecoration('line-through');
+        return $this->hasFontStyle('linethrough');
     }
 
     /**
-     * @param string $alignment {@see TextStyle::$text_alignments}
+     * @param string $alignment
      */
     public function set_align($alignment)
     {
-        $this->verifyStyleValue('align', $alignment, array_keys(self::$text_alignments));
-        $this->styles['text-anchor'] = self::$text_alignments[$alignment];
+        $this->verifyStyleValue('align', $alignment, array('left', 'center', 'right'));
+        $this->styles['text-align'] = $alignment;
     }
 
     /**
-     * @return string {@see TextStyle::$text_alignments}
-     * @throws Exception\UnavailableStyleValue
+     * @return string
      */
     public function get_align()
     {
-        $alignment_value = $this->readStyle('text-anchor');
-
-        if (empty($alignment_value)) {
-            return 'left';
-        }
-
-        $alignment_key = array_search($alignment_value, self::$text_alignments);
-
-        if (!$alignment_key) {
-            throw new Exception\UnavailableStyleValue(
-                'align', $alignment_value, array_keys(self::$text_alignments));
-        }
-        return $alignment_key;
+        $alignment = $this->readStyle('text-align');
+        return $alignment === '' ? 'left' : $alignment;
     }
 
     /**
-     * @param string $alignment {@see TextStyle::$vertical_alignments}
+     * @param string $alignment
      */
     public function set_valign($alignment)
     {
-        $this->verifyStyleValue('valign', $alignment, self::$vertical_alignments);
-        $this->vertical_align = $alignment;
+        $this->verifyStyleValue('valign', $alignment, array('top', 'middle', 'bottom'));
+        $this->styles['vertical-align'] = $alignment;
     }
 
     /**
-     * @return string {@see TextStyle::$vertical_alignments}
+     * @return string
      */
     public function get_valign()
     {
-        return $this->vertical_align;
+        $alignment = $this->readStyle('vertical-align');
+        return $alignment === '' ? 'top' : $alignment;
     }
 
     /**
-     * @param boolean $underline = null
-     * @param boolean $linethrough = null
+     * @param string $type Availables are "bold", "italic", "underline", "linethrough"
+     * @param boolean $enable
      */
-    private function setTextDecoration($underline = null, $linethrough = null)
+    private function updateFontStyle($type, $enable)
     {
-        $decorations = array();
-
-        if ($underline === null) {
-            $underline = $this->get_underline();
-        }
-        if ($linethrough === null) {
-            $linethrough = $this->get_linethrough();
-        }
-
-        if ($underline || $linethrough) {
-            if ($underline) {
-                $decorations[] = 'underline';
-            }
-            if ($linethrough) {
-                $decorations[] = 'line-through';
-            }
+        if ($enable) {
+            $this->enableFontStyle($type);
         } else {
-            $decorations[] = 'none';
+            $this->disableFontStyle($type);
         }
-
-        $this->styles['text-decoration'] = implode(' ', $decorations);
     }
 
     /**
-     * @param string|null $decoration_name
+     * @param string $type {@see self::updateFontStyle()}
+     */
+    private function enableFontStyle($type)
+    {
+        if (!$this->hasFontStyle($type)) {
+            array_push($this->styles['font-style'], $type);
+        }
+    }
+
+    /**
+     * @param string $type {@see self::updateFontStyle()}
+     */
+    private function disableFontStyle($type)
+    {
+        if ($this->hasFontStyle($type)) {
+            $index = array_search($type, $this->styles['font-style']);
+            array_splice($this->styles['font-style'], $index, 1);
+        }
+    }
+
+    /**
+     * @param string $type {@see self::updateFontStyle()}
      * @return boolean
      */
-    private function hasTextDecoration($decoration_name)
+    private function hasFontStyle($type)
     {
-        $decoration = $this->readStyle('text-decoration');
-
-        if (!empty($decoration)) {
-            return in_array($decoration_name, explode(' ', $decoration), true);
-        } else {
-            return false;
-        }
+        return array_search($type, $this->styles['font-style']) !== false;
     }
 }

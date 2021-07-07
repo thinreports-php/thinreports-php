@@ -37,10 +37,10 @@ class AbstractItemTest extends TestCase
 
     function test_initialize()
     {
-        $item = new TestItem($this->page, array('display' => 'true'));
+        $item = new TestItem($this->page, array('display' => true));
         $this->assertTrue($item->isVisible());
 
-        $item = new TestItem($this->page, array('display' => 'false'));
+        $item = new TestItem($this->page, array('display' => false));
         $this->assertFalse($item->isVisible());
     }
 
@@ -51,9 +51,9 @@ class AbstractItemTest extends TestCase
      *      AbstractItem::show
      *      AbstractItem::hide
      */
-    function test_isVisible()
+    function test_methods_for_visibility()
     {
-        $item = new TestItem($this->page, array('display' => 'true'));
+        $item = new TestItem($this->page, array('display' => true));
 
         $item->setVisible(false);
         $this->assertFalse($item->isVisible());
@@ -75,13 +75,13 @@ class AbstractItemTest extends TestCase
         $item = new TestGraphicsItem($this->page, $this->dataItemFormat('rect'));
 
         $item->setStyle('fill_color', 'red');
-        $this->assertEquals('red', $item->getStyle('fill_color'));
+        $this->assertEquals('red', $item->style->get_fill_color());
     }
 
     function test_getStyle()
     {
         $item = new TestGraphicsItem($this->page, $this->dataItemFormat('rect'));
-        $this->assertEquals('#ffffff', $item->style->get_fill_color());
+        $this->assertEquals('#ffffff', $item->getStyle('fill_color'));
     }
 
     function test_setStyles()
@@ -103,40 +103,40 @@ class AbstractItemTest extends TestCase
 
     function test_getParent()
     {
-        $item = new TestItem($this->page, array('display' => 'true'));
+        $item = new TestItem($this->page, array('display' => true));
         $this->assertSame($this->page, $item->getParent());
     }
 
-    function test_getFormat()
+    function test_getIsDynamic()
     {
-        $item = new TestItem($this->page, array('display' => 'true'));
-        $this->assertSame(array('display' => 'true'), $item->getFormat());
+        $item = new TestItem($this->page, array('id' => '', 'display' => true));
+        $this->assertFalse($item->isDynamic());
+
+        $item = new TestItem($this->page, array('id' => 'foo', 'display' => true));
+        $this->assertTrue($item->isDynamic());
     }
 
-    /**
-     * Tests for:
-     *      AbstractItem::getId
-     *      AbstractItem::getType
-     *      AbstractItem::getSVGAttributes
-     */
-    function test_getters_for_Item_attribute()
+    function test_getSchema()
+    {
+        $schema = array('display' => true);
+        $item = new TestItem($this->page, $schema);
+        $this->assertSame($schema, $item->getSchema());
+    }
+
+    function test_getId()
     {
         $item = new TestItem($this->page, array(
-            'display' => 'true',
-            'id' => 'foo_id',
-            'type' => 'foo_type',
-            'svg' => array('attrs' => array('attr' => 'value'))
+            'display' => true,
+            'id' => 'foo_id'
         ));
 
         $this->assertEquals('foo_id', $item->getId());
-        $this->assertEquals('foo_type', $item->getType());
-        $this->assertEquals(array('attr' => 'value'), $item->getSVGAttributes());
     }
 
     function test_isTypeOf()
     {
         $item = new TestItem($this->page, array(
-            'display' => 'true',
+            'display' => true,
             'type' => 'foo_type'
         ));
         $this->assertTrue($item->isTypeOf('foo_type'));

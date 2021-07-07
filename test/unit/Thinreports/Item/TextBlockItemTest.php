@@ -17,12 +17,9 @@ class TextBlockItemTest extends TestCase
 
         $layout_filename = $this->dataLayoutFile('empty_A4P.tlf');
         $report = new Report($layout_filename);
-        $layout = new Layout($layout_filename, array(
-            'format' => array('svg' => '<svg></svg>'),
-            'item_formats' => $text_block_formats
-        ));
+        $layout = new Layout(array('items' => $text_block_formats), 'identifier');
 
-        $this->page= new Page($report, $layout, 1);
+        $this->page = new Page($report, $layout, 1);
     }
 
     private function newTextBlock($data_format_key)

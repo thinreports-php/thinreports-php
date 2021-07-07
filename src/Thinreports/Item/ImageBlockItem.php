@@ -14,16 +14,16 @@ use Thinreports\Item\Style\BasicStyle;
 
 class ImageBlockItem extends AbstractBlockItem
 {
-    const TYPE_NAME = 's-iblock';
+    const TYPE_NAME = 'image-block';
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(Page $parent, array $format)
+    public function __construct(Page $parent, array $schema)
     {
-        parent::__construct($parent, $format);
+        parent::__construct($parent, $schema);
 
-        $this->style = new BasicStyle($format);
+        $this->style = new BasicStyle($schema);
     }
 
     /**

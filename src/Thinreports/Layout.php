@@ -17,7 +17,7 @@ class Layout
 {
     const FILE_EXT_NAME = 'tlf';
     const COMPATIBLE_VERSION_RANGE_START = '>= 0.8.2';
-    const COMPATIBLE_VERSION_RANGE_END   = '< 0.9.0';
+    const COMPATIBLE_VERSION_RANGE_END   = '< 1.0.0';
 
     /**
      * @param string $filename
@@ -34,7 +34,19 @@ class Layout
             throw new Exception\StandardException('Layout File Not Found', $filename);
         }
 
-        return new self($filename, self::parse(file_get_contents($filename, true)));
+        return self::loadData(file_get_contents($filename, true));
+    }
+
+    /**
+     * @param string $data
+     * @return self
+     */
+    static public function loadData($data)
+    {
+        $schema = self::parse($data);
+        $identifier = md5($data);
+
+        return new self($schema, $identifier);
     }
 
     /**
@@ -46,64 +58,17 @@ class Layout
      */
     static public function parse($file_content)
     {
-        $format = json_decode($file_content, true);
+        $schema = json_decode($file_content, true);
 
-        if (!self::isCompatible($format['version'])) {
+        if (!self::isCompatible($schema['version'])) {
             $rules = array(
                 self::COMPATIBLE_VERSION_RANGE_START,
                 self::COMPATIBLE_VERSION_RANGE_END
             );
-            throw new Exception\IncompatibleLayout($format['version'], $rules);
+            throw new Exception\IncompatibleLayout($schema['version'], $rules);
         }
 
-        $item_formats = self::extractItemFormats($format['svg']);
-        self::cleanFormat($format);
-
-        return array(
-            'format' => $format,
-            'item_formats' => $item_formats
-        );
-    }
-
-    /**
-     * @access private
-     *
-     * @param string $layout_format
-     * @return array
-     */
-    static public function extractItemFormats($layout_format)
-    {
-        preg_match_all('/<!--SHAPE(.*?)SHAPE-->/',
-            $layout_format, $matched_items, PREG_SET_ORDER);
-
-        $item_formats = array();
-
-        foreach ($matched_items as $matched_item) {
-            $item_format_json = $matched_item[1];
-            $item_format = json_decode($item_format_json, true);
-
-            if ($item_format['type'] === 's-list') {
-                continue;
-            }
-            if ($item_format['type'] === Item\PageNumberItem::TYPE_NAME) {
-                self::setPageNumberUniqueId($item_format);
-            }
-
-            $item_formats[$item_format['id']] = $item_format;
-        }
-
-        return $item_formats;
-    }
-
-    /**
-     * @access private
-     *
-     * @param array $format
-     */
-    static public function cleanFormat(&$format)
-    {
-        $format['svg'] = preg_replace('/<!\-\-.*?\-\->/', '', $format['svg']);
-        unset($format['state']);
+        return $schema;
     }
 
     /**
@@ -129,40 +94,19 @@ class Layout
         return true;
     }
 
-    /**
-     * @access private
-     *
-     * @param array $item_format
-     */
-    static public function setPageNumberUniqueId(array &$item_format)
-    {
-        if (empty($item_format['id'])) {
-            $item_format['id'] = Item\PageNumberItem::generateUniqueId();
-        }
-    }
-
-    private $format;
-    private $item_foramts = array();
+    private $schema;
     private $identifier;
+    private $item_schemas;
 
     /**
-     * @param string $filename
-     * @param array $deinition array('format' => array, 'item_formats' => array)
+     * @param array $schema
+     * @param string $identifier
      */
-    public function __construct($filename, array $definition)
+    public function __construct(array $schema, $identifier)
     {
-        $this->filename = $filename;
-        $this->format = $definition['format'];
-        $this->item_formats = $definition['item_formats'];
-        $this->identifier = md5($this->format['svg']);
-    }
-
-    /**
-     * @return string
-     */
-    public function getFilename()
-    {
-        return $this->filename;
+        $this->schema = $schema;
+        $this->identifier = $identifier;
+        $this->item_schemas = $this->buildItemSchemas($schema['items']);
     }
 
     /**
@@ -170,7 +114,7 @@ class Layout
      */
     public function getReportTitle()
     {
-        return $this->format['config']['title'];
+        return $this->schema['title'];
     }
 
     /**
@@ -178,7 +122,7 @@ class Layout
      */
     public function getPagePaperType()
     {
-        return $this->format['config']['page']['paper-type'];
+        return $this->schema['report']['paper-type'];
     }
 
     /**
@@ -187,8 +131,10 @@ class Layout
     public function getPageSize()
     {
         if ($this->isUserPaperType()) {
-            $page = $this->format['config']['page'];
-            return array($page['width'], $page['height']);
+            return array(
+              $this->schema['report']['width'],
+              $this->schema['report']['height']
+            );
         } else {
             return null;
         }
@@ -199,7 +145,7 @@ class Layout
      */
     public function isPortraitPage()
     {
-        return $this->format['config']['page']['orientation'] === 'portrait';
+        return $this->schema['report']['orientation'] === 'portrait';
     }
 
     /**
@@ -207,7 +153,7 @@ class Layout
      */
     public function isUserPaperType()
     {
-        return $this->format['config']['page']['paper-type'] === 'user';
+        return $this->schema['report']['paper-type'] === 'user';
     }
 
     /**
@@ -217,17 +163,30 @@ class Layout
      */
     public function getLastVersion()
     {
-        return $this->format['version'];
+        return $this->schema['version'];
     }
 
     /**
      * @access private
      *
-     * @return string
+     * @param array $item_schemas
+     * @return array array('with_id' => array, 'without_id' => array)
      */
-    public function getSVG()
+    public function buildItemSchemas(array $item_schemas)
     {
-        return $this->format['svg'];
+        $with_id = $without_id = array();
+
+        foreach ($item_schemas as $item_schema) {
+            $item_id = $item_schema['id'];
+
+            if ($item_id === '') {
+                $without_id[] = $item_schema;
+            } else {
+                $with_id[$item_id] = $item_schema;
+            }
+        }
+
+        return array('with_id' => $with_id, 'without_id' => $without_id);
     }
 
     /**
@@ -236,9 +195,9 @@ class Layout
      * @param string $id
      * @return boolean
      */
-    public function hasItem($id)
+    public function hasItemById($id)
     {
-        return array_key_exists($id, $this->item_formats);
+        return array_key_exists($id, $this->item_schemas['with_id']);
     }
 
     /**
@@ -251,24 +210,24 @@ class Layout
      */
     public function createItem(Page $owner, $id)
     {
-        if (!$this->hasItem($id)) {
+        if (!$this->hasItemById($id)) {
             throw new Exception\StandardException('Item Not Found', $id);
         }
 
-        $item_format = $this->item_formats[$id];
+        $item_schema = $this->item_schemas['with_id'][$id];
 
-        switch ($item_format['type']) {
-            case 's-tblock':
-                return new Item\TextBlockItem($owner, $item_format);
+        switch ($item_schema['type']) {
+            case 'text-block':
+                return new Item\TextBlockItem($owner, $item_schema);
                 break;
-            case 's-iblock':
-                return new Item\ImageBlockItem($owner, $item_format);
+            case 'image-block':
+                return new Item\ImageBlockItem($owner, $item_schema);
                 break;
-            case 's-pageno';
-                return new Item\PageNumberItem($owner, $item_format);
+            case 'page-number';
+                return new Item\PageNumberItem($owner, $item_schema);
                 break;
             default:
-                return new Item\BasicItem($owner, $item_format);
+                return new Item\BasicItem($owner, $item_schema);
                 break;
         }
     }
@@ -288,18 +247,29 @@ class Layout
      *
      * @return array
      */
-    public function getFormat()
+    public function getSchema()
     {
-        return $this->format;
+        return $this->schema;
     }
 
     /**
      * @access private
      *
+     * @param string $filter all|with_id|without_id
      * @return array
      */
-    public function getItemFormats()
+    public function getItemSchemas($filter = 'all')
     {
-        return $this->item_formats;
+        switch ($filter) {
+            case 'all':
+                return $this->schema['items'];
+                break;
+            case 'with_id':
+                return $this->item_schemas['with_id'];
+                break;
+            case 'without_id':
+                return $this->item_schemas['without_id'];
+                break;
+        }
     }
 }
